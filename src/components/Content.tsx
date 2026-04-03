@@ -24,7 +24,7 @@ export default function Content() {
       </FadeIn>
 
       <FadeIn index={1}>
-        <h1 className="text-[42px] lg:text-[48px] 2xl:text-[59px] font-light -tracking-[1px] leading-[1.2] mb-2 text-black dark:text-white">
+        <h1 className="text-[39px] lg:text-[44px] 2xl:text-[54px] font-light -tracking-[1px] leading-[1.2] mb-2 text-black dark:text-white">
         Founder-philosopher-engineer king.
         </h1>
       </FadeIn>
