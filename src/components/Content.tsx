@@ -25,13 +25,13 @@ export default function Content() {
 
       <FadeIn index={1}>
         <h1 className="text-[42px] lg:text-[48px] 2xl:text-[59px] font-light -tracking-[1px] leading-[1.2] mb-2 text-black dark:text-white">
-          Precision in tech.
+        Founder-philosopher-engineer king.
         </h1>
       </FadeIn>
 
       <FadeIn index={2}>
         <div className="font-[Georgia,'Times_New_Roman',serif] italic text-2xl lg:text-[28px] 2xl:text-[34px] mb-8 leading-[1.4] text-black/55 dark:text-white/70">
-          Depth in ideas.
+        Provisional title.
         </div>
       </FadeIn>
 
@@ -41,15 +41,15 @@ export default function Content() {
 
       <FadeIn index={4}>
         <p className="font-extralight text-[15px] lg:text-[17px] 2xl:text-[21px] leading-[1.9] text-black/60 dark:text-white/75">
-          Engineer, founder, thinker. I'm building{' '}
+          I'm building{' '}
           <a href="https://hypercubic.ai" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-black dark:hover:text-white transition-colors">
             Hypercubic
           </a>
-          , an AI platform for autonomously modernizing mainframes. I write{' '}
+          {', '} and I write{' '}
           <a href="https://www.anticynical.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-black dark:hover:text-white transition-colors">
             Anticynical
           </a>
-          , where I'm developing a psychological and philosophical operating system for a rapidly changing world.
+.
         </p>
       </FadeIn>
 
