@@ -231,18 +231,30 @@ Column math: `60 + 180 + 40 + 560 + 40 + 200 + 60 = 1140px` of content. The 1180
 
 ### Sidenote rail (desktop)
 
+**Single-component, sibling-aside rendering (Tufte-CSS pattern).** A `<Sidenote>` MDX invocation renders both the in-body marker and the rail entry as **siblings** in the DOM — the marker is a `<sup>` inline; the rail entry is an `<aside class="sidenote">` immediately after it in source order. Visual placement of the aside into the right-rail region is achieved via CSS, not via portals or two-pass rendering:
+
+```html
+<!-- what <Sidenote>note text</Sidenote> emits -->
+<sup class="sn-marker" data-sn="3">3</sup>
+<aside class="sn-body" data-sn="3">note text</aside>
+```
+
+The `<aside>` is then either (a) `float: right` with negative `margin-right` to project into the right-rail visual region (canonical Tufte-CSS), or (b) absolutely positioned within a 3-column outer wrapper (`grid-column: 3`) when CSS Grid `subgrid` is comfortable to use. Both work with this DOM shape; (a) is the default for v1 (lighter, no `subgrid` dependency). The "right rail" is therefore not a separate grid column — it is negative-margin space the asides float into. The 3-column layout diagram (above) is a *visual* description, not a structural one.
+
+Mobile (<980px) hides the aside (`.sn-body { display: none; }`) and the inline-expand JS clones the aside's content into a flow element at the end of the marker's containing sentence (see Mobile section).
+
 Anchoring strategy — two options, pick during implementation:
 
-- **CSS-only (paragraph-level adjacency)** — sidenotes are placed in the rail at the same vertical position as the *paragraph* containing the marker, via CSS Grid row alignment or float-right + clear within an outer wrapper. Simpler, more robust to reflow, no JS. The trade-off: when a paragraph spans multiple lines, the sidenote sits next to the paragraph block rather than precisely next to the line of the marker. For most essays this is indistinguishable from line-level anchoring and is the recommended default.
+- **CSS-only (paragraph-level adjacency, recommended for v1)** — sibling asides naturally sit next to the paragraph containing the marker (via the Tufte-CSS pattern above). Simpler, more robust to reflow, no JS. The trade-off: when a paragraph spans multiple lines, the sidenote aligns with the paragraph block rather than precisely with the marker's line. For most essays this is indistinguishable from line-level anchoring.
 - **JS measurement (line-level adjacency)** — measure each marker's `getBoundingClientRect()` after layout settles, position the corresponding sidenote absolutely at that y-coordinate. Re-run on resize. Promises tighter visual coupling but adds runtime complexity and a flash-on-load risk. Reserve for v2 if the paragraph-level version proves visually unsatisfying.
 
 V1 ships with the CSS-only approach unless the implementer finds it visibly off; the spec does not require line-level precision.
 
 Other rules:
 
-- **Collision rule** — if two sidenotes would land at the same y-position, stack them vertically with at least 8px gap. The note whose marker is *higher in the document* wins the anchor; the second is pushed down.
+- **Marker numbering** — assigned at render time via CSS counter (`counter-reset` on the essay body, `counter-increment` on each `.sn-marker`). Generates 1, 2, 3, … in source order. No build-time number injection needed; CSS counters handle it.
+- **Collision rule** — if two sidenotes' asides would visually land at the same y-position, the natural document flow stacks them vertically with at least 8px gap. The note whose marker is *higher in the document* (i.e., earlier in source order) wins the anchor; the second is pushed down by the first's height.
 - **Per-note styling** — Space Grotesk light, 10.5px, dim color, 1px left border in dim color, 12px left padding.
-- **Numbering** — superscript numerals matching the in-body marker.
 
 ## Essay page · mobile mechanics
 
@@ -422,7 +434,7 @@ Six months after
 - Each entry: linking essay's title (serif, link styled) + subtitle (italic dim) + snippet (Space Grotesk light, 12px, with 1px left rule)
 - The linked phrase within the snippet is emphasized (cream color, no underline) so the reader sees what context links here
 - Conditional: section only renders if at least one backlink exists. New essays don't show "Linked from (0 entries)."
-- Ordering: most-recently-modified backlinking essay first (sorted by `modified` from git-dates lookup, which has already populated by the time backlinks render).
+- Ordering: most-recently-modified backlinking essay first (sorted by `modified` from git-dates lookup, which is already populated by the time backlinks render).
 
 ## TOC behavior
 
@@ -431,10 +443,11 @@ Six months after
 - Lives in the **left** sidebar (180px wide, fixed/sticky)
 - Auto-generated from H2 (and optionally nested H3) headings
 - Hierarchical: H2 in normal weight, H3 indented 14px and lighter
-- Active section highlighted as you scroll (intersection observer); inactive entries are italic, active is normal-weight cream
+- Active section highlighted as you scroll. **Intersection-observer config**: `rootMargin: '-20% 0% -70% 0%'`, `threshold: 0` — a section becomes "active" when its heading is in the upper ~20% of the viewport. This avoids active-state flicker as multiple sections briefly intersect during fast scrolling (the default `threshold: 0` rootMargin: 0 config flickers).
+- Inactive entries: italic; active entry: normal-weight cream.
 - No active-state border/box (avoids API-docs feel)
 - Sub-sections of inactive parents are visible but indented; active parent's H3s shown at full opacity
-- Conditional: TOC sidebar hidden if essay has fewer than 2 H2 sections (short essays don't need an outline)
+- Conditional: TOC sidebar **hidden** if essay has fewer than 2 H2 sections. **Column collapse rule:** when hidden, the 180px column collapses to zero width and the body shifts left; the right rail stays where it is (so the body doesn't recentre). Rationale: the body has a content-aware width regardless of the TOC's presence; readers care about reading-flow, not page symmetry.
 
 ### Mobile and tablet (<1180px)
 
@@ -507,13 +520,22 @@ Retained. **Important:** `@astrojs/tailwind` is the legacy Tailwind 3 integratio
 
 Existing components keep their React source:
 
-- `<AmbientClock client:idle />` — hydrates after browser idle (canvas, mouse-reactive)
+- `<AmbientClock client:load />` — hydrates on page load (canvas, mouse-reactive). **Note:** `client:idle` would defer hydration until after browser idle, which would mean the clock briefly fails to respond to early mouse movement. `client:load` is more honest about parity with the current Vite+React behavior (success criterion: "renders identically to today"). The clock is invisible until mouse moves, so the JS cost is hidden from the user regardless.
 - `<ThemeToggle client:load />` — hydrates immediately (theme state must be available on first paint)
 - `GrainOverlay` — convert to static HTML+CSS (no JS needed; just a div with a background image)
 - `Footer` — convert to static Astro component (no JS needed)
 - `Content` — homepage content; convert to Astro component with CSS animations replacing the React staggered fade-in (CSS is simpler and doesn't require React)
 
 The `useTheme` hook persists for `ThemeToggle` and any other client-side themed island. A small `<script is:inline>` in the document head sets `dark` class on `<html>` from `localStorage` before paint, matching the existing inline script pattern in `index.html`.
+
+### Layouts per page
+
+| Page | Layout | Why |
+|---|---|---|
+| `/` (homepage) | `BaseLayout` | Provides theme, fonts, grain overlay, footer — everything the homepage already has. Homepage-specific content (Content + AmbientClock + ThemeToggle islands) goes inline in `pages/index.astro`. |
+| `/essays` (index) | `BaseLayout` | List page — no TOC, no sidenote rail, no metacommentary block. |
+| `/essays/<slug>` | `EssayLayout` (which itself extends `BaseLayout`) | Adds the 3-column grid, meta block, TOC, sidenote rail, backlinks. |
+| `/essays/glossary` | `BaseLayout` | Single anchored page; no TOC, no sidenote rail. |
 
 ## File structure
 
@@ -578,7 +600,7 @@ This is the section that the user explicitly asked to retain — every feature d
 | **Meta-block labels link to glossary** | `MetaBlock.astro` renders `<a href="/essays/glossary#confidence">` on each label. Pure HTML. |
 | **Kesselman ladder graphic on glossary** | `KesselmanLadder.astro` — HTML + CSS port of the brainstorm-validated visual. |
 | **Theme toggle (dark/light)** | Existing React component as `<ThemeToggle client:load />`. Hydrates only this island. |
-| **Ambient clock canvas** | Existing React component as `<AmbientClock client:idle />`. Same code; islanded. |
+| **Ambient clock canvas** | Existing React component as `<AmbientClock client:load />`. Same code; islanded. (`client:load` over `client:idle` for first-paint parity with the current Vite+React build — see React Islands section.) |
 | **Typography (Iowan, Source Serif, Plex Mono, Space Grotesk)** | Self-hosted woff2 in `/public/fonts/` + `@font-face` in `global.css`. Astro is invisible here. |
 | **Tailwind v4** | `@tailwindcss/vite` plugin in `astro.config.mjs` (installed via `npx astro add tailwind`). NOT `@astrojs/tailwind` — that is the legacy Tailwind 3 integration and must not be used. |
 | **Left sidebar TOC (desktop)** | `TOC.astro` — generates from H2/H3 in the rendered MDX. Astro 5's `render(entry)` returns `{ Content, headings, remarkPluginFrontmatter }`; pass `headings` to `TOC.astro`. CSS Grid in `EssayLayout.astro` reserves a left column. Sticky via CSS. Active state via intersection observer (~30 lines vanilla JS). |
