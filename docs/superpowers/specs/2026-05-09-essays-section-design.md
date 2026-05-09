@@ -57,7 +57,7 @@ Each essay is an MDX file in `src/content/essays/<slug>.mdx`. Frontmatter is val
 | `importance` | integer 0–10 | yes | Gwern's decile scale. 0 = a private note, 5 = locally interesting, 10 = world-historical |
 | `confidence` | enum | yes | Kesselman ladder + special tags (see below) |
 | `status` | enum | yes | `notes`, `draft`, `in progress`, `finished` |
-| `stance` | enum | no | `agree`, `disagree`, `withholding`. Omitted (or `—`) for `confidence: log` entries |
+| `stance` | enum | no | `agree`, `disagree`, `withholding`. Omit the field entirely when stance doesn't apply (typically for `confidence: log` or `confidence: emotional` entries). The rendered meta block displays `—` for omitted stance — that is a render-time convention, not a frontmatter value |
 
 ### Confidence values (10 total — 8 Kesselman + 2 special)
 
@@ -85,14 +85,14 @@ Approximate probability ranges shown for reference; rendered on the glossary pag
 | `in progress` | Well-developed; not yet final |
 | `finished` | Complete pending new material |
 
-### Stance values (3 + omitted)
+### Stance values (3 + omission)
 
 | Value | Meaning |
 |---|---|
 | `agree` | I endorse the position the essay argues for |
 | `disagree` | I reject the position the essay argues against (or describes critically) |
 | `withholding` | I'm not yet committed to the position |
-| omitted / `—` | Stance does not apply — typically for `confidence: log` entries |
+| (field omitted) | Stance does not apply — typically for `confidence: log` or `confidence: emotional` entries. The render layer displays `—` in the meta block. The frontmatter must omit the field entirely; do not write a literal `—` (the schema rejects it) |
 
 ### Dates
 
@@ -103,14 +103,18 @@ Auto-computed at build time:
 
 Dates are rendered as small chrome under the title (one line, Space Grotesk light, dim color). They are *not* part of the meta block — the meta block is for epistemic metadata, dates are bookkeeping.
 
-### Schema (Astro content collection)
+### Schema (Astro 5 Content Layer)
+
+Astro 5 uses the Content Layer API (`loader` + `glob`); the legacy `type: 'content'` shape is removed in Astro 6. Config lives at `src/content.config.ts` (the v5 canonical path).
 
 ```ts
 // src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const essays = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/essays', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     subtitle: z.string().optional(),
@@ -128,7 +132,9 @@ const essays = defineCollection({
 export const collections = { essays };
 ```
 
-A frontmatter typo (e.g. `confidence: hightly likely`) fails the build, not at runtime.
+A frontmatter typo (e.g. `confidence: hightly likely`) fails the build, not at runtime. Stance is `.optional()` — to mark "not applicable" (e.g. for `confidence: log` or `confidence: emotional` entries), simply omit the field rather than writing a literal `—`. The visible meta block renders an em-dash for missing stance values.
+
+YAML quoting note: values with spaces (e.g. `confidence: highly likely`) work unquoted, single-quoted (`'highly likely'`), or double-quoted (`"highly likely"`) — YAML parses all three to the same string.
 
 ## Visual design system
 
@@ -181,6 +187,8 @@ Fonts should be self-hosted (woff2 in `/public/fonts/`) with `font-display: swap
 
 Three columns at ≥1180px. Below that, the left TOC drops to a mobile-style chip + drawer (see Mobile section); right-rail sidenotes stay until 980px, where they drop to inline-expand.
 
+Column math: `60 + 180 + 40 + 560 + 40 + 200 + 60 = 1140px` of content. The 1180px breakpoint reserves a 40px slack so the layout doesn't snap from comfortable to cramped at exactly the minimum width.
+
 ```
 ┌─ Page edge ────────────────────────────────────────────────────────────┐
 │  60px      180px       40px   560px      40px      200px       60px    │
@@ -202,7 +210,7 @@ Three columns at ≥1180px. Below that, the left TOC drops to a mobile-style chi
 
 - **Left TOC sidebar:** 180px wide. Sticky (`position: sticky; top: 60px`).
 - **Body column:** ~560px. Narrower than canonical Tufte (~660px); honors "compressed" — shorter measure means easier reading.
-- **Right sidenote rail:** 200px wide. Static-flow (not sticky); each sidenote anchored to its marker line.
+- **Right sidenote rail:** 200px wide. Static-flow (not sticky); each sidenote anchored to its marker (see Sidenote rail section for the anchoring strategy — pure CSS gets paragraph-level adjacency; line-level requires JS).
 - **Top-left "← essays" link:** lives in the page header above the TOC, not in the body column.
 
 ### Anatomy (top to bottom in body column)
@@ -223,10 +231,18 @@ Three columns at ≥1180px. Below that, the left TOC drops to a mobile-style chi
 
 ### Sidenote rail (desktop)
 
-- Sidenotes are positioned next to the line containing their marker. Typically achieved with absolute positioning + JS measurement of marker positions, OR via CSS Grid with `align-self`. Use the simpler CSS-only approach where possible.
-- Fallback if two sidenotes would collide: stack vertically with at least 8px gap; closer one wins anchor position.
-- Each sidenote: small Space Grotesk light, 10.5px, dim color, 1px left border in dim color, 12px left padding.
-- Numbered to match marker.
+Anchoring strategy — two options, pick during implementation:
+
+- **CSS-only (paragraph-level adjacency)** — sidenotes are placed in the rail at the same vertical position as the *paragraph* containing the marker, via CSS Grid row alignment or float-right + clear within an outer wrapper. Simpler, more robust to reflow, no JS. The trade-off: when a paragraph spans multiple lines, the sidenote sits next to the paragraph block rather than precisely next to the line of the marker. For most essays this is indistinguishable from line-level anchoring and is the recommended default.
+- **JS measurement (line-level adjacency)** — measure each marker's `getBoundingClientRect()` after layout settles, position the corresponding sidenote absolutely at that y-coordinate. Re-run on resize. Promises tighter visual coupling but adds runtime complexity and a flash-on-load risk. Reserve for v2 if the paragraph-level version proves visually unsatisfying.
+
+V1 ships with the CSS-only approach unless the implementer finds it visibly off; the spec does not require line-level precision.
+
+Other rules:
+
+- **Collision rule** — if two sidenotes would land at the same y-position, stack them vertically with at least 8px gap. The note whose marker is *higher in the document* wins the anchor; the second is pushed down.
+- **Per-note styling** — Space Grotesk light, 10.5px, dim color, 1px left border in dim color, 12px left padding.
+- **Numbering** — superscript numerals matching the in-body marker.
 
 ## Essay page · mobile mechanics
 
@@ -261,16 +277,25 @@ A small chip sits between the meta block and the body in document flow:
 The sidenote rail collapses; markers stay. When tapped:
 
 1. **Insertion point:** at the *end of the sentence* containing the marker (not the next paragraph break, not mid-sentence). This keeps the note adjacent to its anchor regardless of paragraph length.
+
+   *Sentence-boundary detection:* implemented at MDX compile time via a remark plugin that wraps each sentence in a `<span data-sentence>` element. Runtime knows where to insert the note based on which sentence contains the tapped marker. Avoids fragile runtime regex for abbreviations / decimals / ellipses.
+
 2. **Smooth-scroll on open:** so the top of the note sits ~30% down from the viewport top.
+
 3. **Note rendering:** dimmer sans-serif block (Space Grotesk light, 13.5px) with subtle left border, inserted as a flow element between sentence-fragments. The paragraph splits at the sentence boundary; on close, paragraph re-fuses.
+
 4. **Close affordance:**
-   - **Single ✕ button.** It lives in the note's top-right corner with `position: sticky; top: 12px; right: 14px`. CSS sticky behavior:
-     - Note top in view → ✕ at note's corner (in flow)
-     - Note top scrolled past viewport → ✕ pinned to viewport top-right
-     - Note bottom reaches viewport top → ✕ unsticks and scrolls away with the note (you've finished reading)
+   - **Single ✕ button.** Child of the note element with `position: sticky; top: 12px; right: 14px`. CSS sticky lifecycle (the ✕ must be a child of the sidenote container — sticky requires containment):
+     - **Note top in view → ✕ in flow at the note's top-right corner.**
+     - **Note top scrolled above the sticky offset (12px) → ✕ pins to viewport top-right at `top: 12px`.**
+     - **Note bottom edge reaches the sticky offset (12px from viewport top) → ✕ unsticks and scrolls away with the note.** (At this point the user is at the very end of the note; closing affordance is no longer needed.)
    - **Secondary close path:** re-tap the original marker (highlighted while open).
-5. **Scroll restoration on close:** when the note collapses, scroll position adjusts so the marker is at the same viewport y-position it was when the user tapped it. The reader lands back exactly where they were.
+
+5. **Scroll restoration on close:** capture the marker element on open (by reference, not by y-coordinate). On close, after the note is removed from the DOM, *re-measure* the marker's `getBoundingClientRect().top` and `scrollBy(0, currentTop - openTop)`. Re-measuring at close handles intra-open reflow (viewport rotation, async-loaded images inside the note, font swap) — the captured-y-coordinate approach breaks under reflow.
+
 6. **Multiple notes:** allowed simultaneously. Each independent.
+
+7. **Safari iOS caveat:** `position: sticky` on iOS Safari has historically had quirks with parent overflow, transforms, and rapid-scroll edge cases. The implementer should verify the sticky-close behavior on iOS Safari specifically and budget time for a JS fallback (toggle a fixed-position class when sticky misbehaves) if needed.
 
 ### Why these mechanics matter
 
@@ -323,8 +348,12 @@ For each essay (chronological, newest first):
 
 ### Sorting / filtering
 
-- v1: chronological by `modified` date, newest first
+- v1: chronological by `modified` date, newest first. Sorting depends on git-derived dates being populated *before* the index page renders — see Astro feature mapping for the "Dates" entry. Index page's `getStaticPaths` calls `getCollection('essays')`, then enriches each entry with dates via `git-dates.ts`, then sorts.
 - No filters, no categories, no tag UI
+
+### Layout
+
+Index page uses `BaseLayout` (theme, fonts, grain, footer). It does NOT use `EssayLayout` — there's no TOC, no sidenote rail, no metacommentary block (it's a list page, not an essay).
 
 ## Glossary page (`/essays/glossary`)
 
@@ -340,7 +369,7 @@ In order:
 2. **`#importance`** — text explaining the 0–10 decile scale. Example anchors: 0 = a private note; 5 = locally interesting; 10 = world-historical.
 3. **`#confidence`** — text + the **Kesselman ladder graphic** (rendered the same as the in-brainstorm visual you approved — see `confidence-ladder` reference mockup) + the two special tags (`log`, `emotional`) + a small lineage box explaining Kent → Kesselman → ICD 203.
 4. **`#status`** — text + the four-step progression (`notes`, `draft`, `in progress`, `finished`) with what each means.
-5. **`#stance`** — text + the three values + when `—` applies.
+5. **`#stance`** — text + the three values + when stance is omitted (typically for `confidence: log` or `confidence: emotional` entries; the meta block displays `—` for omitted).
 
 ### Linking from essays
 
@@ -358,13 +387,14 @@ Show, on each essay page, which other essays link to it. Builds the connective t
 
 ### Generation
 
-Build-time process:
+Build-time process — runs **once**, memoized:
 
-1. After all MDX is parsed, scan each essay's compiled HTML/AST for `<a href="/essays/<other-slug>">` (or `[link](/essays/<other-slug>)` in source).
-2. Build a reverse map: `Map<slug, Array<{ fromSlug, snippet, anchor }>>`.
-3. Pass each essay's incoming-link list to its layout at render time.
+1. `src/lib/backlinks.ts` exposes `getBacklinks(slug: string): Backlink[]`. The first call builds the full reverse map; subsequent calls return cached entries. (Top-level memoization in the module — Astro's build executes module top-level code once per worker.)
+2. To build the map: iterate `await getCollection('essays')`; for each entry, parse `entry.body` (raw MDX source string) using a regex/remark walk for both markdown links (`[text](/essays/<slug>)`) and HTML anchors (`<a href="/essays/<slug>">`). Use the **raw MDX body**, not the compiled HTML — Astro 5 doesn't expose a clean "compiled HTML" hook before rendering, and the source-level scan is strictly easier.
+3. Build `Map<linkedToSlug, Array<{ fromSlug, fromTitle, fromSubtitle, snippet, linkedPhrase }>>`.
+4. Each `[slug].astro` page calls `getBacklinks(slug)` from inside `getStaticPaths` (passing the result via `props`) so the layout receives the list at render time.
 
-Snippet generation: take the sentence (or short paragraph) containing the link from the source essay; trim to ~140 characters; emphasize the linking phrase.
+Snippet generation: take the sentence (or short paragraph) containing the link from the source essay's `entry.body`; trim to ~140 characters with mid-sentence ellipsis where needed; record the exact linking phrase as a separate field so the renderer can emphasize it (cream color, no underline — see palette).
 
 ### Display
 
@@ -392,7 +422,7 @@ Six months after
 - Each entry: linking essay's title (serif, link styled) + subtitle (italic dim) + snippet (Space Grotesk light, 12px, with 1px left rule)
 - The linked phrase within the snippet is emphasized (cream color, no underline) so the reader sees what context links here
 - Conditional: section only renders if at least one backlink exists. New essays don't show "Linked from (0 entries)."
-- Ordering: most-recently-modified backlinking essay first.
+- Ordering: most-recently-modified backlinking essay first (sorted by `modified` from git-dates lookup, which has already populated by the time backlinks render).
 
 ## TOC behavior
 
@@ -459,7 +489,7 @@ Strawson <Sidenote>Galen Strawson, "The Impossibility of Moral Responsibility" (
 
 Plain markdown for prose; MDX components for structural needs:
 
-- `<Sidenote>` — produces a marker in body and a sidenote in the rail
+- `<Sidenote>` — produces a marker in body and a sidenote in the rail. Implemented as `Sidenote.astro` and imported as an MDX component (`.astro` files work as MDX components in Astro 5)
 - `<Figure>` — image with optional caption, supports full-bleed and inline layouts
 - `<Pullquote>` — large emphasis block
 
@@ -471,7 +501,7 @@ Plain markdown for prose; MDX components for structural needs:
 
 ### Tailwind v4
 
-Retained. `@astrojs/tailwind` integration is plug-and-play. Existing utility-class usage in homepage components transfers unchanged.
+Retained. **Important:** `@astrojs/tailwind` is the legacy Tailwind 3 integration and must NOT be used here. The project already uses Tailwind 4 via `@tailwindcss/vite`. For Astro, run `npx astro add tailwind` — this installs `@tailwindcss/vite` as a Vite plugin in `astro.config.mjs`. No `tailwind.config.mjs` is required by default in Tailwind 4 (only add one if customizations are needed). Existing utility-class usage in homepage components transfers unchanged.
 
 ### React islands
 
@@ -491,10 +521,8 @@ After the migration, the project layout becomes:
 
 ```
 aayushnaik.com/
-├── astro.config.mjs              ← new; Astro config
-├── content.config.ts             ← new; zod schemas for collections
+├── astro.config.mjs              ← new; Astro config (incl. @tailwindcss/vite plugin via `astro add tailwind`)
 ├── tsconfig.json
-├── tailwind.config.mjs           ← Tailwind v4 config (if needed by integration)
 ├── public/
 │   ├── favicon.svg
 │   └── fonts/                    ← new; self-hosted woff2 (Iowan, Source Serif, IBM Plex Mono)
@@ -540,33 +568,34 @@ This is the section that the user explicitly asked to retain — every feature d
 | Feature | Astro implementation |
 |---|---|
 | **Metacommentary block** | `MetaBlock.astro` reads frontmatter, renders the monospace grid. Plain HTML/CSS. |
-| **`importance`/`confidence`/`status`/`stance`** | Validated by zod schema in `content.config.ts`. Build fails on typos. |
-| **Right-rail sidenotes (desktop)** | CSS Grid in `EssayLayout.astro`. `Sidenote.astro` renders both the in-body marker and the rail entry. Pure CSS for placement. |
-| **Mobile inline-expand notes** | ~1 KB vanilla JS in a `<script>` tag inside `Sidenote.astro`. No React needed. |
-| **`position: sticky` close ✕** | Pure CSS on `.sidenote-mobile-expanded .close`. |
-| **Scroll restoration on close** | Vanilla JS handler. ~10 lines: capture marker's `getBoundingClientRect().top` on open; on close, scroll so it returns to that y. |
+| **`importance`/`confidence`/`status`/`stance`** | Validated by zod schema in `src/content.config.ts` (Content Layer API with `glob` loader). Build fails on typos. |
+| **Right-rail sidenotes (desktop)** | CSS Grid in `EssayLayout.astro`. `Sidenote.astro` renders both the in-body marker and the rail entry. CSS-only paragraph-level adjacency by default; line-level anchoring via JS measurement deferred to v2 unless visibly off. |
+| **Mobile inline-expand notes** | ~1 KB vanilla JS in a `<script>` tag inside `Sidenote.astro`. No React needed. Sentence boundaries marked at MDX compile time by a remark plugin (`<span data-sentence>`); runtime reads them. |
+| **`position: sticky` close ✕** | Pure CSS on the close element inside the sidenote container. iOS Safari sticky has known quirks — verify on device and budget time for a JS fallback if needed. |
+| **Scroll restoration on close** | Vanilla JS handler. Capture marker element by reference on open; on close, **re-measure** `getBoundingClientRect().top` and `scrollBy(0, currentTop - openTop)`. Re-measuring (rather than restoring a captured y-coordinate) handles intra-open reflow. |
 | **Dropcaps** | `.essay-body p:first-of-type::first-letter { … }` in CSS. Zero JS. |
-| **Glossary page** | `src/pages/essays/glossary.astro`. Just another page. |
+| **Glossary page** | `src/pages/essays/glossary.astro`. Uses `BaseLayout` (not `EssayLayout` — no TOC, no sidenote rail). |
 | **Meta-block labels link to glossary** | `MetaBlock.astro` renders `<a href="/essays/glossary#confidence">` on each label. Pure HTML. |
 | **Kesselman ladder graphic on glossary** | `KesselmanLadder.astro` — HTML + CSS port of the brainstorm-validated visual. |
 | **Theme toggle (dark/light)** | Existing React component as `<ThemeToggle client:load />`. Hydrates only this island. |
 | **Ambient clock canvas** | Existing React component as `<AmbientClock client:idle />`. Same code; islanded. |
 | **Typography (Iowan, Source Serif, Plex Mono, Space Grotesk)** | Self-hosted woff2 in `/public/fonts/` + `@font-face` in `global.css`. Astro is invisible here. |
-| **Tailwind v4** | `@astrojs/tailwind` integration. Plug-and-play. |
-| **Left sidebar TOC (desktop)** | `TOC.astro` — generates from H2/H3 in the rendered MDX (Astro exposes `headings` from `<Content />`). CSS Grid in `EssayLayout.astro` reserves a left column. Sticky via CSS. Active state via intersection observer (~30 lines vanilla JS). |
+| **Tailwind v4** | `@tailwindcss/vite` plugin in `astro.config.mjs` (installed via `npx astro add tailwind`). NOT `@astrojs/tailwind` — that is the legacy Tailwind 3 integration and must not be used. |
+| **Left sidebar TOC (desktop)** | `TOC.astro` — generates from H2/H3 in the rendered MDX. Astro 5's `render(entry)` returns `{ Content, headings, remarkPluginFrontmatter }`; pass `headings` to `TOC.astro`. CSS Grid in `EssayLayout.astro` reserves a left column. Sticky via CSS. Active state via intersection observer (~30 lines vanilla JS). |
 | **Mobile TOC chip + slide-down drawer** | Same `TOC.astro`; CSS media query swaps the rendered shape. JS handler for expand/collapse. |
-| **TOC conditional (≥2 H2 sections)** | Compute heading count in the layout; pass `showToc: boolean` to `TOC.astro`. |
-| **Backlinks generation** | `src/lib/backlinks.ts` — runs at build time, scans all MDX files in the `essays` collection, parses out `<a href="/essays/...">` references, builds reverse map. Result passed to each essay page via `getStaticPaths`. |
+| **TOC conditional (≥2 H2 sections)** | `EssayLayout.astro` computes `headings.filter(h => h.depth === 2).length >= 2` and passes `showToc: boolean` to `TOC.astro`. |
+| **Backlinks generation** | `src/lib/backlinks.ts` exposes a top-level memoized reverse map. Runs **once** during the build process (the first call computes; subsequent imports return the same `Map`). Iterates `getCollection('essays')`, parses each `entry.body` (raw MDX source) for `[text](/essays/<slug>)` and `<a href="/essays/<slug>">` references, builds the reverse map keyed by linked-to slug. Each `[slug].astro` calls `getBacklinks(slug)` from `getStaticPaths` props. **Do not** wait for `astro:build:done`; that runs after pages render. |
 | **Backlinks display** | `Backlinks.astro` — renders the "Linked from" section. Conditional on non-empty list. |
-| **Dates (created / modified)** | `src/lib/git-dates.ts` — runs at build time, shells out to `git log --format=%ai --diff-filter=A` for `created` and `git log -1 --format=%ai` for `modified`, per file. |
-| **Index page meta strip** | `src/pages/essays/index.astro` — uses `getCollection('essays')`, sorts by `modified` desc, renders inline meta strip. |
+| **Dates (created / modified)** | `src/lib/git-dates.ts` — shells out to git per file: `git log --diff-filter=A --follow --format=%aI -- <file> \| tail -1` for `created`, `git log -1 --follow --format=%aI -- <file>` for `modified`. `%aI` is strict ISO 8601 (parseable by `new Date()`); `--follow` survives renames. Memoized per file across collection iteration. **Called from inside `getCollection` consumers** (e.g., the index-page `getStaticPaths`, the `[slug].astro` page render) — not from `astro:build:done` (too late, pages already rendered). Index page sort by `modified` therefore sees populated dates. |
+| **Index page meta strip** | `src/pages/essays/index.astro` — uses `getCollection('essays')`, enriches each entry with git dates from `git-dates.ts`, sorts by `modified` desc, renders inline meta strip. Uses `BaseLayout`. |
+| **Linked-snippet emphasis style** | When rendering each backlink's snippet, the linking phrase is wrapped in a span styled cream color (`#f3ead7`), no underline, otherwise normal weight. See palette tokens. |
 | **Future weird thing you want** | Drop in any HTML/CSS/JS, any React/Svelte/Vue island, any custom MDX component. Astro doesn't constrain. |
 
 ## Migration plan (high level — detailed plan to be drafted by writing-plans)
 
 1. **Install Astro alongside existing Vite setup**, or scaffold a new Astro project and migrate. Decision left to writing-plans phase; both are workable.
 2. **Convert homepage** (`src/App.tsx` + components) to Astro pages + islands. AmbientClock and ThemeToggle stay as React islands; GrainOverlay, Footer, Content become static Astro components.
-3. **Set up content collection** with zod schema for essays.
+3. **Set up content collection** with zod schema for essays — Astro 5 Content Layer API (`loader: glob({...})`), config at `src/content.config.ts`. Add the Tailwind 4 integration via `npx astro add tailwind` (NOT `@astrojs/tailwind`).
 4. **Build EssayLayout, MetaBlock, Sidenote, TOC, Backlinks** components.
 5. **Build glossary page** + KesselmanLadder component.
 6. **Self-host fonts** (Iowan/Source Serif, Space Grotesk, IBM Plex Mono — woff2).
@@ -599,9 +628,11 @@ All brainstormed mockups are persisted in `.superpowers/brainstorm/8370-17783473
 ## Open questions (to settle during build)
 
 - **Index page subtitle copy.** Placeholder is *"Beliefs and positions, weighed and dated"* — final copy left to user. Could also be left blank.
-- **Whether to expose `confidence: emotional` or `confidence: log` in the index page meta strip** — both render meaningfully but the stance value should be `—` for these.
-- **Exact pixel grid on tablet** (980–1180px) — TOC drops to mobile chip; sidenote rail stays. Confirm the visual feels right when rendered.
-- **Self-host vs Google Fonts for Source Serif 4 / Space Grotesk.** Self-host preferred but Google Fonts is acceptable v1 if woff2 acquisition is friction.
+- **Tablet (980–1180px) exact pixel grid.** TOC drops to mobile chip; sidenote rail stays. Confirm the visual feels right when rendered with real content.
+- **Date display format.** ISO 8601 (`2026-05-12`) is parseable and consistent; localized (`May 12, 2026`) is friendlier. Pick during build; trivial to swap later.
+- **Existing homepage palette confirmation.** The spec's `#0c0a08` warm-dark and `#fbf8f1` warm-cream are intended to evoke the homepage aesthetic. Verify against `src/index.css` and the existing components during the homepage refactor; tune if needed.
+
+The font question — self-host vs CDN — is settled: **self-host woff2** in `/public/fonts/` (per the typography section). Google Fonts is not an acceptable fallback; bitrot risk and added network dependency outweigh the small acquisition friction.
 
 ## Success criteria for v1
 
@@ -610,8 +641,8 @@ The build is "done" when:
 - [ ] Existing homepage renders identically to today (visual diff: zero meaningful changes)
 - [ ] `/essays`, `/essays/<slug>`, `/essays/glossary` all render with correct chrome and theme support
 - [ ] Frontmatter validation works — invalid `confidence` value fails `astro build`
-- [ ] One seed essay renders with all features visible: title, meta, dropcap, ≥2 sidenotes, ≥3 H2 sections (so TOC appears), at least one inter-essay link (so backlinks appear on the linked-to essay)
-- [ ] Mobile note mechanic works as specified — tap marker, note inserts at end of sentence, sticky ✕ behaves, scroll restores on close
+- [ ] One seed essay renders with all features visible: title, meta, dropcap, ≥2 sidenotes, ≥3 H2 sections (so TOC appears with enough entries to be useful — TOC actually triggers at ≥2 H2s), at least one inter-essay link (so backlinks appear on the linked-to essay)
+- [ ] Mobile note mechanic works as specified — tap marker, note inserts at end of sentence, sticky ✕ behaves, scroll restores on close. **Verified on iOS Safari specifically** — `position: sticky` has known iOS quirks; if device testing reveals issues, the JS fallback (toggle `position: fixed` class on misbehavior) is acceptable
 - [ ] Light/dark toggle works on essay pages
 - [ ] Glossary page renders Kesselman ladder graphic and all anchor sections
 - [ ] Static HTML output deploys to a CDN and serves without errors
