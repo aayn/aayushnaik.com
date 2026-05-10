@@ -117,7 +117,7 @@ const showToc = h2Count >= 2;
   }
 
   .essay-body {
-    counter-reset: sn sn-body;
+    counter-reset: sn sn-body h2-num h3-num;
     font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', Palatino, Georgia, serif;
     font-size: 14.5px;
     line-height: 1.62;
@@ -159,6 +159,8 @@ const showToc = h2Count >= 2;
     color: var(--title);
     margin: 24px 0 10px 0;
     letter-spacing: -0.005em;
+    counter-increment: h2-num;
+    counter-reset: h3-num;
   }
   .essay-body :global(h3) {
     font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
@@ -166,6 +168,23 @@ const showToc = h2Count >= 2;
     font-weight: 500;
     color: var(--title);
     margin: 18px 0 8px 0;
+    counter-increment: h3-num;
+  }
+  .essay-body :global(h2)::before {
+    content: counter(h2-num) ". ";
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--dim);
+    margin-right: 4px;
+    letter-spacing: 0.04em;
+  }
+  .essay-body :global(h3)::before {
+    content: counter(h2-num) "." counter(h3-num) ". ";
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--dim);
+    margin-right: 4px;
+    letter-spacing: 0.04em;
   }
   .essay-body :global(h2),
   .essay-body :global(h3) {

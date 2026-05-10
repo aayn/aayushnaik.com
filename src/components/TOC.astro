@@ -14,15 +14,28 @@ const { headings } = Astro.props;
 const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const h2Count = filtered.filter((h) => h.depth === 2).length;
 const showToc = h2Count >= 2;
+
+// Compute B2-style hierarchical numbers (1., 1.1., 2., 2.1., ...)
+let _h2 = 0;
+let _h3 = 0;
+const numbered = filtered.map((h) => {
+  if (h.depth === 2) {
+    _h2 += 1;
+    _h3 = 0;
+    return { ...h, num: `${_h2}.` };
+  }
+  _h3 += 1;
+  return { ...h, num: `${_h2}.${_h3}.` };
+});
 ---
 {showToc && (
   <>
     <nav class="toc" aria-label="Table of contents">
       <div class="toc-label">Outline</div>
       <ul>
-        {filtered.map((h) => (
+        {numbered.map((h) => (
           <li class={h.depth === 3 ? 'toc-h3' : 'toc-h2'} data-target={h.slug}>
-            <a href={`#${h.slug}`}>{h.text}</a>
+            <a href={`#${h.slug}`}><span class="toc-num">{h.num}</span> {h.text}</a>
           </li>
         ))}
       </ul>
@@ -41,9 +54,9 @@ const showToc = h2Count >= 2;
           <button class="toc-drawer-close" type="button" aria-label="Close outline">×</button>
         </div>
         <ul>
-          {filtered.map((h) => (
+          {numbered.map((h) => (
             <li class={h.depth === 3 ? 'toc-h3' : 'toc-h2'} data-target={h.slug}>
-              <a href={`#${h.slug}`}>{h.text}</a>
+              <a href={`#${h.slug}`}><span class="toc-num">{h.num}</span> {h.text}</a>
             </li>
           ))}
         </ul>
@@ -91,6 +104,12 @@ const showToc = h2Count >= 2;
   }
   .toc li.is-active a { color: var(--title); }
   .toc li:hover a { color: var(--title); }
+  .toc-num {
+    color: var(--dim);
+    margin-right: 4px;
+    font-size: 0.9em;
+    font-style: normal;
+  }
 
   .toc-chip-wrap {
     margin: 0 0 18px 0;
