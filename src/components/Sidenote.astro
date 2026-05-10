@@ -5,7 +5,7 @@
 //
 // Numbering is purely CSS (counter()) — no build-time assignment needed.
 ---
-<sup class="sn-marker" tabindex="0" aria-label="Sidenote"></sup>
+<span class="sn-marker" tabindex="0" role="button" aria-label="Sidenote"></span>
 <aside class="sn-body" role="note">
   <button class="sn-close" type="button" aria-label="Close note">×</button>
   <span class="sn-content"><slot /></span>
@@ -16,22 +16,29 @@
   .sn-marker {
     counter-increment: sn;
     cursor: pointer;
-    font-size: 11px;
+    display: inline-block;
+    font-size: 10px;
     color: var(--title);
-    padding: 1px 5px;
-    background: rgba(243, 234, 215, 0.12);
+    padding: 0 5px;
+    background: rgba(243, 234, 215, 0.14);
     border-radius: 3px;
     margin: 0 1px;
     user-select: none;
     transition: background 0.12s ease;
+    /* Sit in line, not super-aligned */
+    vertical-align: baseline;
+    line-height: 1.4;
+    position: relative;
+    top: -2px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
   }
-  :where(:not(.dark)) .sn-marker {
+  html:not(.dark) .sn-marker {
     background: rgba(43, 38, 32, 0.10);
   }
   .sn-marker::before {
     content: counter(sn);
-    font-size: 9.5px;
-    vertical-align: super;
     line-height: 1;
   }
   .sn-marker:hover, .sn-marker:focus { background: rgba(243, 234, 215, 0.20); outline: none; }
