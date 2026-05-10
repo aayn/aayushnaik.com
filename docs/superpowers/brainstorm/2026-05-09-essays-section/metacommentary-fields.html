@@ -1,0 +1,141 @@
+<style>
+  .meta-preview {
+    background: #f4ede0;
+    color: #2b2620;
+    padding: 32px 36px 28px 36px;
+    border-radius: 4px;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    line-height: 1.5;
+    min-height: 240px;
+  }
+  .meta-preview .essay-title {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+  .meta-preview .essay-sub {
+    font-style: italic;
+    color: #5b5247;
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+  .meta-preview .meta-rule {
+    border: 0;
+    border-top: 1px solid #c9beac;
+    margin: 14px 0 14px 0;
+  }
+  .meta-preview .meta-grid {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px;
+    color: #6a5f4f;
+    letter-spacing: 0.02em;
+    line-height: 1.85;
+  }
+  .meta-preview .meta-grid .k {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 10px;
+    color: #8a7c66;
+    display: inline-block;
+    width: 96px;
+  }
+  .meta-preview .meta-grid .v {
+    color: #2b2620;
+  }
+  .meta-preview .body-tease {
+    margin-top: 18px;
+    color: #4a4138;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .meta-preview .body-tease .dropcap {
+    float: left;
+    font-size: 38px;
+    line-height: 0.85;
+    padding-right: 6px;
+    padding-top: 4px;
+    font-weight: 500;
+  }
+  .options.tall .option { min-height: 0; }
+  .options.tall .option .content { width: 100%; }
+  .pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border: 1px solid #c9beac;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6a5f4f;
+    margin-right: 4px;
+  }
+</style>
+
+<h2>Which metacommentary fields do you want on each essay?</h2>
+<p class="subtitle">Pick the field set. The visual styling here is just a sketch — we'll refine that later.</p>
+
+<div class="options tall">
+  <div class="option" data-choice="lean" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Lean — Gwern's three</h3>
+      <p>Importance, confidence, status. Clean, well-tested. Skips the agree/disagree axis you mentioned.</p>
+      <div class="meta-preview" style="margin-top:14px">
+        <div class="essay-title">On the moral weight of suffering</div>
+        <div class="essay-sub">Why hedonic experience grounds ethics</div>
+        <hr class="meta-rule"/>
+        <div class="meta-grid">
+          <div><span class="k">Importance</span><span class="v">9 / 10</span></div>
+          <div><span class="k">Confidence</span><span class="v">highly likely</span></div>
+          <div><span class="k">Status</span><span class="v">finished</span></div>
+        </div>
+        <div class="body-tease"><span class="dropcap">S</span>uffering is the only thing that matters intrinsically. Everything else — preferences, fairness, beauty…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="stance" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>+ Stance (Recommended)</h3>
+      <p>Adds a fourth axis: where <em>you</em> land — agree / disagree / withholding. Confidence is about the <em>argument</em>; stance is about <em>your position</em>.</p>
+      <div class="meta-preview" style="margin-top:14px">
+        <div class="essay-title">On free will</div>
+        <div class="essay-sub">Reading Strawson against the compatibilists</div>
+        <hr class="meta-rule"/>
+        <div class="meta-grid">
+          <div><span class="k">Importance</span><span class="v">7 / 10</span></div>
+          <div><span class="k">Confidence</span><span class="v">likely</span></div>
+          <div><span class="k">Status</span><span class="v">in progress</span></div>
+          <div><span class="k">Stance</span><span class="v">withholding <span style="color:#8a7c66">— not yet committed</span></span></div>
+        </div>
+        <div class="body-tease"><span class="dropcap">T</span>he compatibilist move feels like changing the subject. But hard determinism leaves morality groundless…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="full" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Full — stance + epistemic tags</h3>
+      <p>B plus optional flags: <span class="pill">log</span><span class="pill">emotional</span><span class="pill">exploratory</span><span class="pill">fiction</span>. More expressive, more boilerplate per essay.</p>
+      <div class="meta-preview" style="margin-top:14px">
+        <div class="essay-title">Notebook on grief</div>
+        <div class="essay-sub">Six months after</div>
+        <hr class="meta-rule"/>
+        <div class="meta-grid">
+          <div><span class="k">Importance</span><span class="v">8 / 10 <span style="color:#8a7c66">— to me</span></span></div>
+          <div><span class="k">Confidence</span><span class="v">log</span></div>
+          <div><span class="k">Status</span><span class="v">notes</span></div>
+          <div><span class="k">Stance</span><span class="v">— <span style="color:#8a7c66">(not endorsed)</span></span></div>
+          <div><span class="k">Tags</span><span class="v"><span class="pill">emotional</span><span class="pill">log</span></span></div>
+        </div>
+        <div class="body-tease"><span class="dropcap">I</span> didn't know that grief had its own internal calendar. February is heavier than December for reasons I can't…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Click an option to indicate your preference. You can also describe a custom set in the terminal.</p>

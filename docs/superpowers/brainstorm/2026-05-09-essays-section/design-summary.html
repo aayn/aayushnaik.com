@@ -1,0 +1,171 @@
+<style>
+  .ds-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+  @media (max-width: 1100px) { .ds-grid { grid-template-columns: 1fr; } }
+  .ds-card {
+    background: #0c0a08;
+    color: rgba(216,207,191,0.85);
+    border-radius: 6px;
+    padding: 22px 26px 24px 26px;
+    border-left: 2px solid rgba(243,234,215,0.18);
+  }
+  .ds-card h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 14px 0;
+  }
+  .ds-card .row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(216,207,191,0.06);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12.5px; line-height: 1.55;
+    color: rgba(216,207,191,0.78);
+  }
+  .ds-card .row:last-child { border-bottom: none; }
+  .ds-card .row .k {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10.5px; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.45);
+    text-transform: uppercase;
+    padding-top: 1px;
+  }
+  .ds-card .row .v b {
+    color: #f3ead7; font-weight: 500;
+  }
+  .ds-card .row .v code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11px;
+    background: rgba(243,234,215,0.08);
+    color: #f3ead7;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .ds-card.scope { border-left-color: rgba(207,233,184,0.4); }
+  .ds-card.outscope { border-left-color: rgba(236,184,184,0.35); opacity: 0.92; }
+
+  .ds-foot {
+    margin-top: 26px;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12.5px;
+    color: rgba(216,207,191,0.55);
+  }
+  .ds-foot b { color: #f3ead7; font-weight: 500; }
+</style>
+
+<h2>Design summary · everything settled</h2>
+<p class="subtitle">If anything looks wrong, push back now — once I write the spec, this becomes the source of truth.</p>
+
+<div class="ds-grid">
+
+  <!-- Purpose -->
+  <div class="ds-card scope">
+    <h3>Purpose</h3>
+    <div class="row"><span class="k">section</span><span class="v">A new <code>/essays</code> section, anti-performance counterpart to Anticynical. Slower writing, with epistemic disclosure attached.</span></div>
+    <div class="row"><span class="k">spirit</span><span class="v">A workshop, not a stage. Notes, drafts, in-progress positions all welcome. Form is part of the medium (Tufte/Gwern lineage).</span></div>
+    <div class="row"><span class="k">anticynical</span><span class="v"><b>Paused.</b> Future relationship TBD; possibly newsletter or lead-feed for finished pieces.</span></div>
+  </div>
+
+  <!-- IA -->
+  <div class="ds-card scope">
+    <h3>Information architecture</h3>
+    <div class="row"><span class="k">URLs</span><span class="v"><code>/essays</code>, <code>/essays/&lt;slug&gt;</code>, <code>/essays/glossary</code></span></div>
+    <div class="row"><span class="k">homepage</span><span class="v"><b>No link from homepage</b> until content exists. Seed first; link later.</span></div>
+    <div class="row"><span class="k">nav</span><span class="v">"← essays" on essay pages; "← home" on essays index. No top-bar nav.</span></div>
+  </div>
+
+  <!-- Visual -->
+  <div class="ds-card scope">
+    <h3>Visual identity</h3>
+    <div class="row"><span class="k">palette</span><span class="v">Dark-first (warm <code>#0c0a08</code>). Light/dark toggle preserved.</span></div>
+    <div class="row"><span class="k">body</span><span class="v"><b>Serif</b> — Iowan Old Style / Source Serif 4 / Palatino fallback. ~14.5px desktop, 1.62 line-height.</span></div>
+    <div class="row"><span class="k">chrome</span><span class="v"><b>Space Grotesk</b> light — eyebrow, sidenote text, "← essays" links, theme toggle. Matches homepage.</span></div>
+    <div class="row"><span class="k">meta block</span><span class="v"><b>IBM Plex Mono</b> — gives the metadata a "specification sheet" feel.</span></div>
+    <div class="row"><span class="k">titles</span><span class="v">Serif, light weight, slightly tightened tracking.</span></div>
+    <div class="row"><span class="k">italic</span><span class="v">Serif italic for subtitles + emphasis.</span></div>
+    <div class="row"><span class="k">density</span><span class="v">Compressed Tufte — tighter leading and narrower body than canonical Tufte.</span></div>
+  </div>
+
+  <!-- Metadata -->
+  <div class="ds-card scope">
+    <h3>Metacommentary fields</h3>
+    <div class="row"><span class="k">importance</span><span class="v"><code>0–10</code> integer (Gwern decile)</span></div>
+    <div class="row"><span class="k">confidence</span><span class="v">Kesselman 8 + special: <code>certain · highly likely · likely · possible · unlikely · highly unlikely · remote · impossible · log · emotional</code></span></div>
+    <div class="row"><span class="k">status</span><span class="v"><code>notes · draft · in progress · finished</code></span></div>
+    <div class="row"><span class="k">stance</span><span class="v"><code>agree · disagree · withholding</code> (or <code>—</code> for log entries)</span></div>
+    <div class="row"><span class="k">dates</span><span class="v">Auto from git: <code>created</code> · <code>modified</code>. Shown small under title, not in meta block.</span></div>
+    <div class="row"><span class="k">validation</span><span class="v">Zod schema in Astro content collections — typos fail at <em>build</em>, not runtime.</span></div>
+  </div>
+
+  <!-- Essay layout -->
+  <div class="ds-card scope">
+    <h3>Essay page layout · desktop</h3>
+    <div class="row"><span class="k">grid</span><span class="v">Body ~620px left · 220px right rail · ~36px gap</span></div>
+    <div class="row"><span class="k">order</span><span class="v">Title → subtitle → date line → meta block → body w/ dropcap</span></div>
+    <div class="row"><span class="k">sidenotes</span><span class="v">Right-rail, always visible. Numbered <code>¹²³</code>; markers in body, full text in rail anchored near anchor line.</span></div>
+    <div class="row"><span class="k">dropcap</span><span class="v">First letter of first paragraph; CSS <code>::first-letter</code></span></div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="ds-card scope">
+    <h3>Essay page · mobile mechanics</h3>
+    <div class="row"><span class="k">sidenote</span><span class="v">Tap marker → note inserts at end of containing sentence; smooth-scroll to ~30% from viewport top.</span></div>
+    <div class="row"><span class="k">close</span><span class="v">One button. <code>position: sticky</code> on ✕ — sits in note's top-right; sticks to viewport top while note is being read.</span></div>
+    <div class="row"><span class="k">close paths</span><span class="v">Tap ✕ or re-tap marker. On close, scroll restores so marker is at original viewport y-position.</span></div>
+    <div class="row"><span class="k">type</span><span class="v">Body 14.5 → 16.5px; line-height 1.62 → 1.70.</span></div>
+    <div class="row"><span class="k">chrome</span><span class="v">"← essays" → "←" only; eyebrow shrinks; theme toggle preserved.</span></div>
+  </div>
+
+  <!-- Index page -->
+  <div class="ds-card scope">
+    <h3>Index page</h3>
+    <div class="row"><span class="k">layout</span><span class="v">Inline meta strip — title → italic subtitle → mono meta row.</span></div>
+    <div class="row"><span class="k">color</span><span class="v">Status as subtle chip (green=finished, cream=active, dim=draft/notes); stance tinted (green-agree, red-disagree, neutral-withholding).</span></div>
+    <div class="row"><span class="k">sort</span><span class="v">Chronological, newest first. No filters / no categories initially.</span></div>
+    <div class="row"><span class="k">page header</span><span class="v">"Essays" — italic sub: <em>"Beliefs and positions, weighed and dated"</em> (placeholder; rewriteable)</span></div>
+  </div>
+
+  <!-- Glossary -->
+  <div class="ds-card scope">
+    <h3>Glossary</h3>
+    <div class="row"><span class="k">URL</span><span class="v"><code>/essays/glossary</code></span></div>
+    <div class="row"><span class="k">sections</span><span class="v"><code>#importance · #confidence · #status · #stance</code></span></div>
+    <div class="row"><span class="k">graphic</span><span class="v">Kesselman ladder embedded in confidence section (the chart you saw).</span></div>
+    <div class="row"><span class="k">linking</span><span class="v">Each label in essay meta blocks links to its glossary anchor — readers can click "confidence" to learn what "highly likely" means.</span></div>
+  </div>
+
+  <!-- Architecture -->
+  <div class="ds-card scope">
+    <h3>Architecture</h3>
+    <div class="row"><span class="k">framework</span><span class="v"><b>Astro</b> — content-first, static-by-default, zero JS for prose</span></div>
+    <div class="row"><span class="k">authoring</span><span class="v">MDX files in <code>src/content/essays/&lt;slug&gt;.mdx</code></span></div>
+    <div class="row"><span class="k">routing</span><span class="v">File-based — <code>src/pages/essays/[slug].astro</code></span></div>
+    <div class="row"><span class="k">react</span><span class="v">Existing AmbientClock + ThemeToggle as <code>client:*</code> islands. Zero refactor of their internals.</span></div>
+    <div class="row"><span class="k">CSS</span><span class="v">Tailwind v4 retained; component-scoped CSS where appropriate.</span></div>
+    <div class="row"><span class="k">deploy</span><span class="v">Static HTML to CDN (your hosting preference).</span></div>
+  </div>
+
+  <!-- Out of scope -->
+  <div class="ds-card outscope">
+    <h3>Deferred · not in this build</h3>
+    <div class="row"><span class="k">homepage link</span><span class="v">Add later, once essays exist worth landing on.</span></div>
+    <div class="row"><span class="k">TOC</span><span class="v">No outline / table of contents per essay (not requested).</span></div>
+    <div class="row"><span class="k">backlinks</span><span class="v">No cross-essay backlinks (Gwern feature; can be added later).</span></div>
+    <div class="row"><span class="k">search</span><span class="v">No search (deferred — easy to add when there's content).</span></div>
+    <div class="row"><span class="k">RSS</span><span class="v">Not in v1. Can be added with one Astro endpoint when needed.</span></div>
+    <div class="row"><span class="k">filters / categories</span><span class="v">No tags / topic filters on index page in v1.</span></div>
+  </div>
+
+</div>
+
+<div class="ds-foot">
+  <b>Reply "go"</b> to lock this in — I'll write the spec to <code style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">docs/superpowers/specs/2026-05-09-essays-section-design.md</code> and commit. Push back on anything that's wrong.
+</div>

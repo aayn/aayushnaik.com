@@ -1,0 +1,242 @@
+<style>
+  .tb-mock {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 28px 36px 36px 36px;
+    margin-top: 18px;
+    position: relative;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+    overflow: hidden;
+  }
+  .tb-tag {
+    position: absolute; top: 14px; right: 18px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+  }
+  .tb-back {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    margin-bottom: 30px;
+  }
+
+  .tb-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 36px;
+  }
+  @media (max-width: 980px) { .tb-grid { grid-template-columns: 1fr; } }
+
+  .tb-body { font-size: 14px; line-height: 1.62; color: rgba(216,207,191,0.88); }
+  .tb-body .title {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .tb-body .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 15px; margin-bottom: 16px;
+  }
+  .tb-body .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; line-height: 1.95; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 10px 0; margin-bottom: 22px;
+  }
+  .tb-body .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9.5px;
+    display: inline-block; width: 92px; color: rgba(216,207,191,0.42);
+  }
+  .tb-body p { margin: 0 0 12px 0; }
+  .tb-body h2 {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 19px; font-weight: 500; color: #f3ead7;
+    margin-top: 22px; margin-bottom: 10px;
+    letter-spacing: -0.005em;
+  }
+  .tb-body sup { font-size: 9.5px; color: rgba(243,234,215,0.7); padding: 0 1px; }
+
+  /* Right rail: TOC sticky at top, sidenotes flow below */
+  .tb-rail {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: rgba(216,207,191,0.78);
+  }
+  .tb-toc {
+    position: sticky;
+    top: 12px;
+    border-bottom: 1px solid rgba(216,207,191,0.14);
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+  }
+  .tb-toc .label {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.45);
+    margin-bottom: 10px;
+  }
+  .tb-toc .toc-row {
+    font-size: 12px; line-height: 1.55;
+    padding: 4px 0 4px 10px;
+    color: rgba(216,207,191,0.65);
+    border-left: 1px solid rgba(216,207,191,0.1);
+    cursor: pointer;
+  }
+  .tb-toc .toc-row:hover { color: #f3ead7; border-left-color: rgba(243,234,215,0.4); }
+  .tb-toc .toc-row.active {
+    color: #f3ead7;
+    border-left: 2px solid #f3ead7;
+    padding-left: 9px;
+  }
+
+  .tb-rail .sn {
+    margin-bottom: 18px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+    font-size: 10.5px; line-height: 1.5;
+    color: rgba(216,207,191,0.55);
+  }
+  .tb-rail .sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 14px; }
+
+  /* Backlinks footer */
+  .tb-backlinks {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(216,207,191,0.14);
+  }
+  .tb-backlinks .bl-label {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    margin-bottom: 14px;
+  }
+  .tb-backlinks .bl-row {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(216,207,191,0.06);
+  }
+  .tb-backlinks .bl-row:last-child { border-bottom: none; }
+  .tb-backlinks .bl-title {
+    font-size: 16px; font-weight: 500; color: #f3ead7;
+    line-height: 1.2; margin-bottom: 2px;
+  }
+  .tb-backlinks .bl-sub {
+    font-style: italic; color: rgba(243,234,215,0.55); font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .tb-backlinks .bl-snippet {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.6;
+    color: rgba(216,207,191,0.65);
+    padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+  }
+  .tb-backlinks .bl-snippet em { color: #f3ead7; font-style: normal; }
+
+  .tb-rules {
+    margin-top: 30px;
+    background: rgba(216,207,191,0.04);
+    padding: 18px 22px 22px 22px;
+    border-radius: 6px;
+    border-left: 2px solid rgba(243,234,215,0.18);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: rgba(216,207,191,0.78);
+    font-size: 12.5px; line-height: 1.7;
+  }
+  .tb-rules h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+  .tb-rules ul { padding-left: 18px; margin: 0; }
+  .tb-rules ul li b {
+    color: #f3ead7; font-weight: 500;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+  }
+  .tb-rules code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    background: rgba(243,234,215,0.08);
+    padding: 1px 5px; border-radius: 3px;
+    color: #f3ead7;
+  }
+</style>
+
+<h2>TOC + backlinks fit into the existing layout</h2>
+<p class="subtitle">Right rail does double duty: TOC pinned at top via <code style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:rgba(243,234,215,0.1);padding:1px 6px;border-radius:3px;color:#f3ead7">position: sticky</code>; sidenotes flow below. Backlinks live as a "Linked from" section after the body.</p>
+
+<div class="tb-mock">
+  <div class="tb-tag">Desktop · with TOC + backlinks</div>
+  <div class="tb-back">← essays</div>
+
+  <div class="tb-grid">
+    <div class="tb-body">
+      <div class="title">On free will</div>
+      <div class="sub">Reading Strawson against the compatibilists</div>
+      <div class="meta">
+        <div><span class="k">Importance</span>7 / 10</div>
+        <div><span class="k">Confidence</span>likely</div>
+        <div><span class="k">Status</span>in progress</div>
+        <div><span class="k">Stance</span>withholding</div>
+      </div>
+
+      <h2 id="compatibilism">The compatibilist subject-change</h2>
+      <p>The compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question entirely untouched.</p>
+
+      <h2 id="strawson">Strawson's regress</h2>
+      <p>Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character. But your character is the product of nature and nurture, neither of which you chose.</p>
+
+      <h2 id="moral-implications">What this leaves of moral responsibility</h2>
+      <p>If the regress is right, ordinary blame is unfounded — but reactive attitudes still serve a function…</p>
+
+      <!-- Backlinks footer -->
+      <div class="tb-backlinks">
+        <div class="bl-label">Linked from</div>
+        <div class="bl-row">
+          <div class="bl-title"><a href="#" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(243,234,215,0.3)">On the moral weight of suffering</a></div>
+          <div class="bl-sub">Why hedonic experience grounds ethics</div>
+          <div class="bl-snippet">"…this is why <em>blame</em> in the strict sense seems incoherent — the regress shown in <em>On free will</em> applies to the chooser of values, not just the chooser of acts…"</div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-title"><a href="#" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(243,234,215,0.3)">Notebook on grief</a></div>
+          <div class="bl-sub">Six months after</div>
+          <div class="bl-snippet">"…Strawson's regress feels different from the inside; nothing about it makes the bereaved any less responsible-feeling…"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tb-rail">
+      <!-- TOC sticky at top -->
+      <div class="tb-toc">
+        <div class="label">Outline</div>
+        <div class="toc-row active">The compatibilist subject-change</div>
+        <div class="toc-row">Strawson's regress</div>
+        <div class="toc-row">What this leaves of moral responsibility</div>
+      </div>
+      <!-- Sidenotes flow below -->
+      <div class="sn"><span class="num">¹</span>Frankfurt cases sidestep the deeper issue.</div>
+      <div class="sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+    </div>
+  </div>
+</div>
+
+<div class="tb-rules">
+  <h3>Rules</h3>
+  <ul>
+    <li><b>TOC location</b> &nbsp; Top of right rail. <code>position: sticky; top: 12px</code> — stays visible as you scroll. Sidenotes flow below it; if a sidenote near the top of the page would overlap, it sits below the TOC.</li>
+    <li><b>TOC content</b> &nbsp; Auto-generated from H2 headings (and optionally H3 nested). No manual maintenance.</li>
+    <li><b>TOC active state</b> &nbsp; Highlights the current section as you scroll (intersection observer).</li>
+    <li><b>TOC conditional</b> &nbsp; Hidden if essay has fewer than 2 H2 sections — short essays don't need an outline.</li>
+    <li><b>TOC mobile</b> &nbsp; Collapsible drawer at top of essay. Single tap to expand; auto-collapses when a link is followed.</li>
+    <li><b>Backlinks location</b> &nbsp; "Linked from" section at the bottom of essay body, before footer.</li>
+    <li><b>Backlinks generation</b> &nbsp; Build-time scan: parse every essay's MDX, find links to other essays, build a reverse-lookup map. Pass to layout per essay.</li>
+    <li><b>Backlinks display</b> &nbsp; Linking essay's title (serif) + subtitle (italic) + a snippet showing the linking sentence/paragraph with the link emphasized.</li>
+    <li><b>Backlinks conditional</b> &nbsp; Section only renders if at least one backlink exists. New essays don't show an empty "Linked from."</li>
+    <li><b>Backlinks ordering</b> &nbsp; Most-recently-modified first.</li>
+  </ul>
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Approve and I'll write the spec.</p>

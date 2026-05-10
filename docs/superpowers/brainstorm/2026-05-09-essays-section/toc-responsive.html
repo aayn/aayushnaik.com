@@ -1,0 +1,393 @@
+<style>
+  .toc-row3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) 360px 360px;
+    gap: 22px;
+    margin-top: 22px;
+    align-items: start;
+  }
+  @media (max-width: 1280px) {
+    .toc-row3 { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .step-label {
+    text-align: center;
+    margin-bottom: 8px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.6);
+  }
+  .step-label .num {
+    background: rgba(243,234,215,0.16);
+    color: #f3ead7;
+    padding: 2px 8px; border-radius: 999px;
+    margin-right: 8px; font-weight: 400; letter-spacing: 0.12em;
+  }
+  .step-caption {
+    text-align: center;
+    margin-top: 12px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.55;
+    color: rgba(216,207,191,0.72);
+    max-width: 360px;
+    margin-left: auto; margin-right: auto;
+  }
+  .step-caption .keyword {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11px;
+    background: rgba(243,234,215,0.1);
+    color: #f3ead7;
+    padding: 1px 6px; border-radius: 3px;
+  }
+
+  /* DESKTOP frame */
+  .desk-frame {
+    background: #0c0a08;
+    border-radius: 6px;
+    padding: 22px 24px 26px 24px;
+    color: #d8cfbf;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', Palatino, Georgia, serif;
+    position: relative;
+    overflow: hidden;
+    height: 540px;
+  }
+  .desk-frame .ph-eyebrow {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.45);
+    margin-bottom: 14px;
+    display: flex; justify-content: space-between;
+  }
+  .desk-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    gap: 26px;
+  }
+  .desk-grid .body { font-size: 13px; line-height: 1.6; color: rgba(216,207,191,0.85); }
+  .desk-grid .body .title {
+    font-size: 22px; font-weight: 500; line-height: 1.18;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .desk-grid .body .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .desk-grid .body .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 9.5px; line-height: 1.95;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 8px 0; margin-bottom: 16px;
+  }
+  .desk-grid .body .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 8.5px;
+    display: inline-block; width: 80px; color: rgba(216,207,191,0.42);
+  }
+  .desk-grid .body h2 {
+    font-size: 16px; font-weight: 500; color: #f3ead7;
+    margin: 16px 0 8px 0; letter-spacing: -0.005em;
+  }
+  .desk-grid .body p { margin: 0 0 10px 0; }
+  .desk-grid .body sup { font-size: 9px; color: rgba(243,234,215,0.7); }
+
+  .desk-toc {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+  }
+  .desk-toc .label {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.45);
+    margin-bottom: 10px;
+  }
+  .desk-toc .toc-row {
+    font-size: 11px; line-height: 1.45;
+    padding: 4px 0 4px 9px;
+    color: rgba(216,207,191,0.65);
+    border-left: 1px solid rgba(216,207,191,0.1);
+  }
+  .desk-toc .toc-row.active {
+    color: #f3ead7;
+    border-left: 2px solid #f3ead7;
+    padding-left: 8px;
+  }
+  .desk-toc-divider {
+    border-bottom: 1px solid rgba(216,207,191,0.14);
+    margin: 14px 0 16px 0;
+  }
+  .desk-sn {
+    font-size: 10px; line-height: 1.5;
+    padding-left: 10px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+    color: rgba(216,207,191,0.55);
+    margin-bottom: 14px;
+  }
+  .desk-sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 12px; }
+
+  /* MOBILE phone frames */
+  .phone {
+    background: #1a1612;
+    border-radius: 30px;
+    padding: 12px 7px 16px 7px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.5);
+    width: 340px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .phone .notch {
+    width: 70px; height: 16px;
+    background: #000;
+    border-radius: 0 0 12px 12px;
+    margin: 0 auto 8px auto;
+  }
+  .phone-screen {
+    background: #0c0a08;
+    border-radius: 22px;
+    padding: 18px 20px 22px 20px;
+    color: #d8cfbf;
+    font-family: 'Iowan Old Style', 'Source Serif 4', Palatino, Georgia, serif;
+    overflow: hidden;
+    height: 540px;
+    position: relative;
+  }
+  .phone-screen::after {
+    content: '';
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 28px;
+    background: linear-gradient(to bottom, transparent, #0c0a08);
+    pointer-events: none;
+  }
+  .phone-screen .ph-eyebrow {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.45);
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .ph-title {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .ph-sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 13.5px;
+    margin-bottom: 14px;
+  }
+  .ph-meta {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10px; line-height: 1.95; letter-spacing: 0.03em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 8px 0; margin-bottom: 16px;
+  }
+  .ph-meta .k {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 9px;
+    display: inline-block; width: 80px; color: rgba(216,207,191,0.42);
+  }
+
+  /* Mobile TOC chip — collapsed */
+  .toc-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(216,207,191,0.06);
+    border-left: 2px solid rgba(216,207,191,0.32);
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 18px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 11.5px;
+    color: rgba(216,207,191,0.78);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .toc-chip .left { display: flex; align-items: center; gap: 8px; }
+  .toc-chip .glyph {
+    font-family: 'IBM Plex Mono', monospace;
+    color: rgba(216,207,191,0.55);
+    font-size: 12px;
+  }
+  .toc-chip .count {
+    color: rgba(216,207,191,0.45);
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .toc-chip .arrow {
+    font-size: 11px;
+    color: rgba(216,207,191,0.55);
+    transition: transform .2s ease;
+  }
+  .toc-chip.open .arrow { transform: rotate(180deg); }
+
+  /* Mobile TOC expanded panel */
+  .toc-panel {
+    background: rgba(216,207,191,0.05);
+    border-left: 2px solid rgba(243,234,215,0.32);
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 18px;
+    padding: 4px 0 6px 0;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    overflow: hidden;
+  }
+  .toc-panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(216,207,191,0.04);
+    border-bottom: 1px solid rgba(216,207,191,0.1);
+    font-size: 11.5px; color: rgba(216,207,191,0.78);
+    letter-spacing: 0.04em;
+  }
+  .toc-panel-head .left { display: flex; align-items: center; gap: 8px; }
+  .toc-panel-head .glyph {
+    font-family: 'IBM Plex Mono', monospace;
+    color: rgba(216,207,191,0.55);
+    font-size: 12px;
+  }
+  .toc-panel-head .x {
+    width: 22px; height: 22px;
+    border-radius: 999px;
+    background: rgba(243,234,215,0.14);
+    border: 1px solid rgba(243,234,215,0.18);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(243,234,215,0.85);
+    font-size: 13px; line-height: 1;
+  }
+  .toc-panel .item {
+    padding: 9px 14px 9px 22px;
+    font-size: 13px; line-height: 1.4;
+    color: rgba(216,207,191,0.78);
+    border-left: 1px solid transparent;
+    margin: 4px 0 4px 12px;
+    border-bottom: 1px solid rgba(216,207,191,0.05);
+  }
+  .toc-panel .item:last-child { border-bottom: none; }
+  .toc-panel .item.active {
+    color: #f3ead7;
+    border-left: 2px solid #f3ead7;
+    padding-left: 21px;
+  }
+
+  .ph-body { font-size: 16px; line-height: 1.7; }
+  .ph-body p { margin: 0 0 14px 0; }
+  .ph-body h2 {
+    font-size: 18px; font-weight: 500; color: #f3ead7;
+    margin: 18px 0 8px 0;
+  }
+  .ph-body sup {
+    font-size: 11px; color: #f3ead7;
+    padding: 1px 5px; background: rgba(243,234,215,0.12);
+    border-radius: 3px; cursor: pointer;
+    display: inline-block; line-height: 1.2; vertical-align: super;
+  }
+</style>
+
+<h2>TOC across desktop and mobile</h2>
+<p class="subtitle">Same data, three states. The mobile chip stays sticky after the user scrolls past it, so the outline is always one tap away.</p>
+
+<div class="toc-row3">
+
+  <!-- DESKTOP -->
+  <div>
+    <div class="step-label"><span class="num">1</span>Desktop · ≥ 980px</div>
+    <div class="desk-frame">
+      <div class="ph-eyebrow"><span>← essays</span><span>essays · free will</span></div>
+      <div class="desk-grid">
+        <div class="body">
+          <div class="title">On free will</div>
+          <div class="sub">Reading Strawson against the compatibilists</div>
+          <div class="meta">
+            <div><span class="k">Importance</span>7 / 10</div>
+            <div><span class="k">Confidence</span>likely</div>
+            <div><span class="k">Status</span>in progress</div>
+            <div><span class="k">Stance</span>withholding</div>
+          </div>
+          <h2>The compatibilist subject-change</h2>
+          <p>The compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question untouched.</p>
+          <h2>Strawson's regress</h2>
+          <p>Strawson<sup>2</sup> presses harder…</p>
+        </div>
+        <div class="desk-toc">
+          <div class="label">Outline</div>
+          <div class="toc-row active">The compatibilist…</div>
+          <div class="toc-row">Strawson's regress</div>
+          <div class="toc-row">What this leaves…</div>
+          <div class="desk-toc-divider"></div>
+          <div class="desk-sn"><span class="num">¹</span>Frankfurt cases sidestep the deeper issue.</div>
+          <div class="desk-sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+        </div>
+      </div>
+    </div>
+    <div class="step-caption">Right rail does double duty: TOC <span class="keyword">position: sticky</span> at the top, sidenotes flow below it. As you scroll, the active section is highlighted.</div>
+  </div>
+
+  <!-- MOBILE COLLAPSED -->
+  <div>
+    <div class="step-label"><span class="num">2</span>Mobile · TOC collapsed</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-screen">
+        <div class="ph-eyebrow"><span>← Naik</span><span>essays · free will</span></div>
+        <div class="ph-title">On free will</div>
+        <div class="ph-sub">Reading Strawson against the compatibilists</div>
+        <div class="ph-meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+
+        <div class="toc-chip">
+          <span class="left">
+            <span class="glyph">≡</span>
+            <span>Outline</span>
+            <span class="count">3 sections</span>
+          </span>
+          <span class="arrow">▾</span>
+        </div>
+
+        <div class="ph-body">
+          <p>The compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but…</p>
+        </div>
+      </div>
+    </div>
+    <div class="step-caption">Default state — a small "≡ Outline · 3 sections ▾" chip sits between the meta block and the body. Tap to expand. After scroll past, the chip becomes <span class="keyword">position: sticky</span> at the top of the viewport, always one tap away.</div>
+  </div>
+
+  <!-- MOBILE EXPANDED -->
+  <div>
+    <div class="step-label"><span class="num">3</span>Mobile · TOC expanded</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-screen">
+        <div class="ph-eyebrow"><span>← Naik</span><span>essays · free will</span></div>
+        <div class="ph-title">On free will</div>
+        <div class="ph-sub">Reading Strawson against…</div>
+        <div class="ph-meta" style="font-size:9.5px;line-height:1.9">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+        </div>
+
+        <div class="toc-panel">
+          <div class="toc-panel-head">
+            <span class="left">
+              <span class="glyph">≡</span>
+              <span>Outline</span>
+            </span>
+            <span class="x">×</span>
+          </div>
+          <div class="item active">The compatibilist subject-change</div>
+          <div class="item">Strawson's regress</div>
+          <div class="item">What this leaves of moral responsibility</div>
+        </div>
+
+        <div class="ph-body">
+          <p>The compatibilist move<sup>1</sup> feels like changing the…</p>
+        </div>
+      </div>
+    </div>
+    <div class="step-caption">Tap-expanded — sections shown as a slide-down panel. Tapping any section: smooth-scroll to it + auto-collapse. Tap × or chip again to dismiss without navigating.</div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Approve and I'll write the spec — the TOC mechanic above goes in as part of it.</p>

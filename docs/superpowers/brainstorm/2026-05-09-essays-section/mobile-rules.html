@@ -1,0 +1,258 @@
+<style>
+  .device-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 22px;
+    align-items: start;
+    margin-top: 20px;
+  }
+  @media (max-width: 1100px) {
+    .device-row { grid-template-columns: 1fr; }
+  }
+
+  .device {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 26px 30px 30px 30px;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .device .device-tag {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .device .back {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    margin-bottom: 18px;
+  }
+
+  /* Desktop pane */
+  .desk-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 200px;
+    gap: 30px;
+    margin-top: 22px;
+  }
+  .desk-grid .body { font-size: 14px; line-height: 1.62; color: rgba(216,207,191,0.88); }
+  .desk-grid .body .title {
+    font-size: 26px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .desk-grid .body .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 14px; margin-bottom: 16px;
+  }
+  .desk-grid .body .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; line-height: 1.95; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 10px 0; margin-bottom: 22px;
+  }
+  .desk-grid .body .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9.5px;
+    display: inline-block; width: 92px; color: rgba(216,207,191,0.42);
+  }
+  .desk-grid .body p { margin: 0 0 12px 0; }
+  .desk-grid .body .dropcap {
+    float: left; font-size: 42px; line-height: 0.85;
+    padding-right: 6px; padding-top: 4px; color: #f3ead7;
+  }
+  .desk-grid .body sup { font-size: 9.5px; color: rgba(243,234,215,0.7); padding: 0 1px; }
+  .desk-grid .rail {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; line-height: 1.5;
+    color: rgba(216,207,191,0.55);
+    padding-top: 56px;
+  }
+  .desk-grid .rail .sn {
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+  }
+  .desk-grid .rail .sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 14px; }
+
+  /* Phone frame */
+  .phone {
+    background: #1a1612;
+    border-radius: 32px;
+    padding: 14px 8px 18px 8px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.5);
+    width: 360px;
+    margin: 0 auto;
+  }
+  .phone .notch {
+    width: 80px; height: 18px;
+    background: #000;
+    border-radius: 0 0 12px 12px;
+    margin: 0 auto 10px auto;
+  }
+  .phone-screen {
+    background: #0c0a08;
+    border-radius: 22px;
+    padding: 22px 22px 26px 22px;
+    color: #d8cfbf;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+    overflow: hidden;
+  }
+  .phone-screen .ph-eyebrow {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    margin-bottom: 14px;
+  }
+  .phone-screen .ph-title {
+    font-size: 24px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.14;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .phone-screen .ph-sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 14px; margin-bottom: 14px;
+  }
+  .phone-screen .ph-meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; line-height: 2.0; letter-spacing: 0.03em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 8px 0; margin-bottom: 18px;
+  }
+  .phone-screen .ph-meta .k {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 9px;
+    display: inline-block; width: 80px; color: rgba(216,207,191,0.42);
+  }
+  .phone-screen .ph-body { font-size: 16.5px; line-height: 1.7; }
+  .phone-screen .ph-body p { margin: 0 0 14px 0; }
+  .phone-screen .ph-body .dropcap {
+    float: left; font-size: 46px; line-height: 0.85;
+    padding-right: 6px; padding-top: 4px; color: #f3ead7;
+  }
+  .phone-screen .ph-body sup {
+    font-size: 11px; color: #f3ead7;
+    padding: 1px 4px;
+    background: rgba(243,234,215,0.12);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .phone-screen .ph-body sup.open {
+    background: rgba(243,234,215,0.22);
+  }
+  .ph-inline-note {
+    margin: 8px 0 14px 0;
+    padding: 10px 14px;
+    background: rgba(216,207,191,0.06);
+    border-left: 2px solid rgba(216,207,191,0.3);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 13px; line-height: 1.55;
+    color: rgba(216,207,191,0.78);
+    border-radius: 0 4px 4px 0;
+  }
+  .ph-inline-note .nn-num {
+    color: rgba(216,207,191,0.5);
+    font-weight: 400;
+    margin-right: 6px;
+  }
+
+  .rules {
+    margin-top: 26px;
+    background: rgba(216,207,191,0.04);
+    padding: 18px 22px 22px 22px;
+    border-radius: 6px;
+    border-left: 2px solid rgba(243,234,215,0.18);
+  }
+  .rules h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 12px 0;
+  }
+  .rules ul {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: rgba(216,207,191,0.78);
+    font-size: 12.5px; line-height: 1.7;
+    padding-left: 18px; margin: 0;
+  }
+  .rules ul li b {
+    color: #f3ead7; font-weight: 500;
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+  }
+</style>
+
+<h2>Same essay, two devices</h2>
+<p class="subtitle">Marginalia change behavior; everything else <em>scales</em>, doesn't disappear.</p>
+
+<div class="device-row">
+  <!-- Desktop -->
+  <div class="device">
+    <div class="device-tag">Desktop · 1280px</div>
+    <div class="back">← essays</div>
+    <div class="desk-grid">
+      <div class="body">
+        <div class="title">On free will</div>
+        <div class="sub">Reading Strawson against the compatibilists</div>
+        <div class="meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+        <p><span class="dropcap">T</span>he compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question entirely untouched.</p>
+        <p>Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character.</p>
+      </div>
+      <div class="rail">
+        <div class="sn"><span class="num">¹</span>Frankfurt-style cases sidestep the deeper issue.</div>
+        <div class="sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-screen">
+        <div class="ph-eyebrow">←  Aayush Naik</div>
+        <div class="ph-title">On free will</div>
+        <div class="ph-sub">Reading Strawson against the compatibilists</div>
+        <div class="ph-meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+        <div class="ph-body">
+          <p><span class="dropcap">T</span>he compatibilist move<sup class="open">1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question entirely untouched.</p>
+          <div class="ph-inline-note"><span class="nn-num">¹</span>Frankfurt-style cases sidestep the deeper issue rather than resolving it.</div>
+          <p>Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:14px;font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(216,207,191,0.55)">
+      Mobile · 375px · note ¹ tapped open
+    </div>
+  </div>
+</div>
+
+<div class="rules">
+  <h3>Responsive rules</h3>
+  <ul>
+    <li><b>marginalia</b> &nbsp; rail collapses; markers tap-to-expand inline below paragraph in dimmer sans-serif</li>
+    <li><b>body type</b> &nbsp; 14.5px → 16.5px (closer reading distance needs larger apparent size)</li>
+    <li><b>line-height</b> &nbsp; 1.62 → 1.70 (looser leading for thumb tap comfort)</li>
+    <li><b>body width</b> &nbsp; viewport minus 22px gutters; no artificial measure cap</li>
+    <li><b>metadata block</b> &nbsp; same shape, font-size 10.5px → 10px; never hidden</li>
+    <li><b>chrome</b> &nbsp; "← essays" → "←" arrow only; site eyebrow shrinks</li>
+    <li><b>dropcap</b> &nbsp; stays, slightly larger relative to body (46px vs 42px)</li>
+    <li><b>theme toggle &amp; grain overlay</b> &nbsp; same as homepage; still works</li>
+  </ul>
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Approve these rules in the terminal, or tell me which to adjust.</p>

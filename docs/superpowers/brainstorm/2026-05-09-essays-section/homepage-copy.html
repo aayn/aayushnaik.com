@@ -1,0 +1,158 @@
+<style>
+  .copy-stack { display: flex; flex-direction: column; gap: 22px; margin-top: 18px; }
+  .copy-mock {
+    background: #000;
+    border-radius: 6px;
+    padding: 56px 60px 56px 60px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .copy-mock:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.35); }
+  .copy-letter {
+    position: absolute; top: 14px; right: 18px;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,255,255,0.35);
+  }
+  .copy-stage {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+  .copy-eyebrow {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 36px;
+  }
+  .copy-h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 44px; letter-spacing: -1px; line-height: 1.2;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .copy-italic {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 28px; line-height: 1.4;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 28px;
+  }
+  .copy-rule {
+    width: 48px; height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin-bottom: 26px;
+  }
+  .copy-lead {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 200;
+    font-size: 17px; line-height: 1.9;
+    color: rgba(255,255,255,0.75);
+  }
+  .copy-lead a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: inherit;
+  }
+  .copy-lead a:hover { color: #fff; }
+  .copy-coda {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 200;
+    font-size: 15px; line-height: 1.8;
+    color: rgba(255,255,255,0.55);
+    margin-top: 18px;
+    font-style: italic;
+  }
+  .copy-coda a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: inherit;
+  }
+  .copy-explain {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(216,207,191,0.12);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.6;
+    color: rgba(216,207,191,0.7);
+  }
+  .copy-explain b { color: #f3ead7; font-weight: 500; letter-spacing: 0.04em; }
+  .copy-explain .scenario {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(243,234,215,0.1); color: rgba(243,234,215,0.85);
+    vertical-align: middle;
+  }
+</style>
+
+<h2>Homepage copy — three framings to react to</h2>
+<p class="subtitle">Each shown in your actual homepage style (Space Grotesk, dark bg, your existing eyebrow / h1 / italic). Pick the one that captures it, or rewrite.</p>
+
+<div class="copy-stack">
+
+  <!-- Option A: Workshop, keeping Anticynical -->
+  <div class="copy-mock" data-choice="workshop" onclick="toggleSelect(this)">
+    <div class="copy-letter">A</div>
+    <div class="copy-stage">
+      <div class="copy-eyebrow">Aayush Naik</div>
+      <div class="copy-h1">Founder-philosopher-engineer king.</div>
+      <div class="copy-italic">Provisional title.</div>
+      <div class="copy-rule"></div>
+      <div class="copy-lead">
+        I'm building <a href="#">Hypercubic</a>, and I write <a href="#">Anticynical</a>.
+      </div>
+      <div class="copy-coda">
+        <a href="#">Essays here</a> are slower — each marked with my confidence, current stance, and how finished it is.
+      </div>
+    </div>
+
+    <div class="copy-explain">
+      <span class="scenario">Anticynical · active</span>
+      <b>A · Workshop framing</b> &nbsp; Keep Anticynical as a present-tense thing you do. Add an italic coda that distinguishes the new section by what's <em>different</em> — the metadata. Doesn't bash Substack; just declares the difference factually.
+    </div>
+  </div>
+
+  <!-- Option B: Anti-performance, explicit contrast -->
+  <div class="copy-mock" data-choice="contrast" onclick="toggleSelect(this)">
+    <div class="copy-letter">B</div>
+    <div class="copy-stage">
+      <div class="copy-eyebrow">Aayush Naik</div>
+      <div class="copy-h1">Founder-philosopher-engineer king.</div>
+      <div class="copy-italic">Provisional title.</div>
+      <div class="copy-rule"></div>
+      <div class="copy-lead">
+        I'm building <a href="#">Hypercubic</a>. <a href="#">Anticynical</a> is what I publish; <a href="#">essays here</a> are what I'm thinking — each marked with how sure I am of it.
+      </div>
+    </div>
+
+    <div class="copy-explain">
+      <span class="scenario">Anticynical · active</span>
+      <b>B · Publishing vs. thinking (explicit contrast)</b> &nbsp; Compresses both into one sentence. The verbs do the work — <em>publish</em> implies finality / performance; <em>think</em> implies process / honesty. Sharp, slightly opinionated.
+    </div>
+  </div>
+
+  <!-- Option C: Sunsetting Anticynical, foregrounding essays -->
+  <div class="copy-mock" data-choice="sunset" onclick="toggleSelect(this)">
+    <div class="copy-letter">C</div>
+    <div class="copy-stage">
+      <div class="copy-eyebrow">Aayush Naik</div>
+      <div class="copy-h1">Founder-philosopher-engineer king.</div>
+      <div class="copy-italic">Provisional title.</div>
+      <div class="copy-rule"></div>
+      <div class="copy-lead">
+        I'm building <a href="#">Hypercubic</a>, and I write <a href="#">essays here</a> — slower than a newsletter, each marked with how sure I am, where I land, and how finished it is.
+      </div>
+      <div class="copy-coda" style="font-size:13px;color:rgba(255,255,255,0.4)">
+        Earlier writing on <a href="#">Anticynical</a>.
+      </div>
+    </div>
+
+    <div class="copy-explain">
+      <span class="scenario">Anticynical · winding down</span>
+      <b>C · Foreground essays · demote Anticynical</b> &nbsp; Lead reads like a present-tense statement of where you write now. Anticynical drops to a small "earlier writing on…" line — still findable, no longer the primary verb. Best if you've actually stopped publishing on Substack.
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Click your direction (or describe a fourth one). Then I'll write the spec.</p>

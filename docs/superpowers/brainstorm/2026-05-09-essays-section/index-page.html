@@ -1,0 +1,265 @@
+<style>
+  .idx-stack { display: flex; flex-direction: column; gap: 26px; margin-top: 20px; }
+  .idx-mock {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 26px 36px 36px 36px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    position: relative;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+  }
+  .idx-mock:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.25); }
+
+  .idx-letter {
+    position: absolute; top: 14px; right: 18px;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(216,207,191,0.45);
+  }
+  .idx-reco {
+    display: inline-block;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    background: rgba(243,234,215,0.16); color: #f3ead7;
+    padding: 2px 8px; border-radius: 999px; vertical-align: middle;
+    margin-left: 8px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+  }
+  .idx-back {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    position: absolute; top: 28px; left: 36px;
+  }
+  .idx-page-head {
+    text-align: center;
+    margin: 18px 0 28px 0;
+  }
+  .idx-page-head .ph-title {
+    font-size: 30px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .idx-page-head .ph-sub {
+    font-style: italic; color: rgba(243,234,215,0.55); font-size: 14px;
+  }
+
+  /* Shared meta value styling */
+  .idx-meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.78);
+  }
+  .idx-meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9.5px;
+    color: rgba(216,207,191,0.42);
+  }
+
+  /* Layout A: inline strip */
+  .layA .entry { padding: 18px 0 18px 0; border-top: 1px solid rgba(216,207,191,0.10); }
+  .layA .entry:first-child { border-top: none; }
+  .layA .entry .e-title {
+    font-size: 22px; font-weight: 500; line-height: 1.18;
+    color: #f3ead7; margin-bottom: 2px;
+  }
+  .layA .entry .e-sub {
+    font-style: italic; color: rgba(243,234,215,0.55); font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .layA .entry .e-meta {
+    display: flex; gap: 22px; flex-wrap: wrap;
+  }
+  .layA .entry .e-meta span { white-space: nowrap; }
+  .layA .entry .e-meta .k { margin-right: 4px; }
+
+  /* Layout B: two-column directory */
+  .layB .entry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 30px;
+    padding: 20px 0 20px 0;
+    border-top: 1px solid rgba(216,207,191,0.10);
+    align-items: start;
+  }
+  .layB .entry:first-child { border-top: none; }
+  @media (max-width: 760px) {
+    .layB .entry { grid-template-columns: 1fr; gap: 8px; }
+  }
+  .layB .entry .e-title {
+    font-size: 22px; font-weight: 500; line-height: 1.18;
+    color: #f3ead7; margin-bottom: 2px;
+  }
+  .layB .entry .e-sub {
+    font-style: italic; color: rgba(243,234,215,0.55); font-size: 14px;
+  }
+  .layB .entry .e-meta {
+    line-height: 1.95;
+    padding-top: 4px;
+  }
+  .layB .entry .e-meta .row { display: flex; }
+  .layB .entry .e-meta .k { display: inline-block; width: 80px; }
+
+  /* Status pill style for status field */
+  .stat {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 3px;
+    font-size: 9.5px; letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .stat-finished   { background: rgba(180,222,160,0.16); color: #cfe9b8; }
+  .stat-progress   { background: rgba(243,234,215,0.16); color: #f3ead7; }
+  .stat-draft      { background: rgba(243,234,215,0.10); color: rgba(243,234,215,0.7); }
+  .stat-notes      { background: rgba(216,207,191,0.08); color: rgba(216,207,191,0.6); }
+
+  /* Stance value styling */
+  .stnc { font-style: normal; }
+  .stnc-agree       { color: #cfe9b8; }
+  .stnc-disagree    { color: #ecb8b8; }
+  .stnc-withholding { color: rgba(243,234,215,0.7); }
+  .stnc-none        { color: rgba(216,207,191,0.4); }
+
+  .idx-pros {
+    margin-top: 22px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.6;
+    color: rgba(216,207,191,0.7);
+    padding-top: 14px;
+    border-top: 1px solid rgba(216,207,191,0.12);
+  }
+  .idx-pros b { color: #f3ead7; font-weight: 500; letter-spacing: 0.04em; }
+</style>
+
+<h2>Essays index page</h2>
+<p class="subtitle">How essays appear in the list — with their metadata visible at a glance, since that's the whole point.</p>
+
+<div class="idx-stack">
+
+  <!-- Layout A: inline strip -->
+  <div class="idx-mock layA" data-choice="strip" onclick="toggleSelect(this)">
+    <div class="idx-letter">A</div>
+    <div class="idx-back">← home</div>
+    <div class="idx-page-head">
+      <div class="ph-title">Essays</div>
+      <div class="ph-sub">Beliefs and positions, weighed and dated</div>
+    </div>
+
+    <div class="entry">
+      <div class="e-title">On the moral weight of suffering</div>
+      <div class="e-sub">Why hedonic experience grounds ethics</div>
+      <div class="e-meta idx-meta">
+        <span><span class="k">imp</span>9 / 10</span>
+        <span><span class="k">conf</span>highly likely</span>
+        <span><span class="k">status</span><span class="stat stat-finished">finished</span></span>
+        <span><span class="k">stance</span><span class="stnc stnc-agree">agree</span></span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="e-title">On free will</div>
+      <div class="e-sub">Reading Strawson against the compatibilists</div>
+      <div class="e-meta idx-meta">
+        <span><span class="k">imp</span>7 / 10</span>
+        <span><span class="k">conf</span>likely</span>
+        <span><span class="k">status</span><span class="stat stat-progress">in progress</span></span>
+        <span><span class="k">stance</span><span class="stnc stnc-withholding">withholding</span></span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="e-title">Notebook on grief</div>
+      <div class="e-sub">Six months after</div>
+      <div class="e-meta idx-meta">
+        <span><span class="k">imp</span>8 / 10</span>
+        <span><span class="k">conf</span>log</span>
+        <span><span class="k">status</span><span class="stat stat-notes">notes</span></span>
+        <span><span class="k">stance</span><span class="stnc stnc-none">—</span></span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="e-title">The compression of meaning</div>
+      <div class="e-sub">On why dense writing rewards re-reading</div>
+      <div class="e-meta idx-meta">
+        <span><span class="k">imp</span>5 / 10</span>
+        <span><span class="k">conf</span>possible</span>
+        <span><span class="k">status</span><span class="stat stat-draft">draft</span></span>
+        <span><span class="k">stance</span><span class="stnc stnc-withholding">withholding</span></span>
+      </div>
+    </div>
+
+    <div class="idx-pros">
+      <b>A · Inline meta strip</b> &nbsp; Title → subtitle → one row of metadata. Clean, scannable, mobile-native (already a single column).
+      <span style="opacity:0.7"> &nbsp; ↑ simple and direct &nbsp; ↓ less typographically distinctive — looks like a tagged blog</span>
+    </div>
+  </div>
+
+  <!-- Layout B: two-column directory -->
+  <div class="idx-mock layB" data-choice="directory" onclick="toggleSelect(this)">
+    <div class="idx-letter">B</div>
+    <div class="idx-back">← home</div>
+    <div class="idx-page-head">
+      <div class="ph-title">Essays <span class="idx-reco">Recommended</span></div>
+      <div class="ph-sub">Beliefs and positions, weighed and dated</div>
+    </div>
+
+    <div class="entry">
+      <div>
+        <div class="e-title">On the moral weight of suffering</div>
+        <div class="e-sub">Why hedonic experience grounds ethics</div>
+      </div>
+      <div class="e-meta idx-meta">
+        <div class="row"><span class="k">imp</span>9 / 10</div>
+        <div class="row"><span class="k">conf</span>highly likely</div>
+        <div class="row"><span class="k">status</span><span class="stat stat-finished">finished</span></div>
+        <div class="row"><span class="k">stance</span><span class="stnc stnc-agree">agree</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div>
+        <div class="e-title">On free will</div>
+        <div class="e-sub">Reading Strawson against the compatibilists</div>
+      </div>
+      <div class="e-meta idx-meta">
+        <div class="row"><span class="k">imp</span>7 / 10</div>
+        <div class="row"><span class="k">conf</span>likely</div>
+        <div class="row"><span class="k">status</span><span class="stat stat-progress">in progress</span></div>
+        <div class="row"><span class="k">stance</span><span class="stnc stnc-withholding">withholding</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div>
+        <div class="e-title">Notebook on grief</div>
+        <div class="e-sub">Six months after</div>
+      </div>
+      <div class="e-meta idx-meta">
+        <div class="row"><span class="k">imp</span>8 / 10</div>
+        <div class="row"><span class="k">conf</span>log</div>
+        <div class="row"><span class="k">status</span><span class="stat stat-notes">notes</span></div>
+        <div class="row"><span class="k">stance</span><span class="stnc stnc-none">—</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div>
+        <div class="e-title">The compression of meaning</div>
+        <div class="e-sub">On why dense writing rewards re-reading</div>
+      </div>
+      <div class="e-meta idx-meta">
+        <div class="row"><span class="k">imp</span>5 / 10</div>
+        <div class="row"><span class="k">conf</span>possible</div>
+        <div class="row"><span class="k">status</span><span class="stat stat-draft">draft</span></div>
+        <div class="row"><span class="k">stance</span><span class="stnc stnc-withholding">withholding</span></div>
+      </div>
+    </div>
+
+    <div class="idx-pros">
+      <b>B · Two-column directory</b> &nbsp; Title block on the left, metadata block on the right — like a card catalog of positions. Mirrors the essay-page anatomy. Mobile collapses to stacked single column (≈ Layout A).
+      <span style="opacity:0.7"> &nbsp; ↑ distinctive and Tufte-flavored &nbsp; ↑ scannable as a "specimen list" &nbsp; ↑ honors that essays = positions</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Status uses subtle color (green = finished, cream = active, dim = draft/notes); stance gets a hint of color too (green-agree, red-disagree, neutral-withholding). Click your pick.</p>

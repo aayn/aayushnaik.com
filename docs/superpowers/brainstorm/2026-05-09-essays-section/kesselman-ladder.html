@@ -1,0 +1,230 @@
+<style>
+  .kk-wrap {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 28px 36px 32px 36px;
+    margin-top: 18px;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+  }
+  .kk-head .kk-title {
+    font-size: 22px; font-weight: 500; line-height: 1.18;
+    color: #f3ead7; letter-spacing: -0.01em;
+  }
+  .kk-head .kk-sub {
+    font-style: italic; color: rgba(243,234,215,0.55); font-size: 14px;
+    margin-top: 4px; margin-bottom: 22px;
+  }
+
+  .kk-ladder {
+    border-top: 1px solid rgba(216,207,191,0.14);
+    padding-top: 14px;
+  }
+  .kk-row {
+    display: grid;
+    grid-template-columns: 160px 90px 1fr 50px;
+    gap: 22px;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(216,207,191,0.06);
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: rgba(216,207,191,0.85);
+  }
+  .kk-row .term {
+    color: #f3ead7;
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .kk-row .pct {
+    color: rgba(216,207,191,0.6);
+    font-size: 11px;
+  }
+  .kk-row .bar-wrap {
+    height: 6px;
+    background: rgba(243,234,215,0.05);
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kk-row .bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: rgba(243,234,215,0.55);
+    border-radius: 999px;
+  }
+  .kk-row .center {
+    text-align: right;
+    color: rgba(216,207,191,0.7);
+    font-size: 11px;
+  }
+  .kk-row.k-extreme .bar { background: rgba(207,233,184,0.7); }
+  .kk-row.k-impossible .bar { background: rgba(236,184,184,0.55); }
+  .kk-row .axis {
+    margin-top: 8px;
+    height: 1px;
+    background: rgba(216,207,191,0.1);
+    position: relative;
+  }
+  .kk-axis {
+    display: grid;
+    grid-template-columns: 160px 90px 1fr 50px;
+    gap: 22px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(216,207,191,0.1);
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: rgba(216,207,191,0.42);
+  }
+  .kk-axis .axis-bar {
+    display: flex; justify-content: space-between;
+  }
+  .kk-axis .axis-bar span:nth-child(2),
+  .kk-axis .axis-bar span:nth-child(3),
+  .kk-axis .axis-bar span:nth-child(4) {
+    text-align: center;
+  }
+
+  .kk-tags {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(216,207,191,0.14);
+  }
+  .kk-tags h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+  .kk-tag-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 22px;
+    padding: 6px 0;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12px;
+    color: rgba(216,207,191,0.85);
+  }
+  .kk-tag-row .term { color: #f3ead7; }
+  .kk-tag-row .desc {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 13.5px;
+    color: rgba(216,207,191,0.7);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .kk-lineage {
+    margin-top: 26px;
+    padding: 16px 20px;
+    background: rgba(216,207,191,0.04);
+    border-left: 2px solid rgba(243,234,215,0.18);
+    border-radius: 0 4px 4px 0;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.65;
+    color: rgba(216,207,191,0.78);
+  }
+  .kk-lineage h4 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+  .kk-lineage b {
+    color: #f3ead7; font-weight: 500;
+  }
+</style>
+
+<h2>Kesselman's verbal-probability ladder</h2>
+<p class="subtitle">Eight levels mapping verbal expressions to rough probability bands.</p>
+
+<div class="kk-wrap">
+  <div class="kk-head">
+    <div class="kk-title">The ladder</div>
+    <div class="kk-sub">Term · approximate probability range · band</div>
+  </div>
+
+  <div class="kk-ladder">
+    <div class="kk-row k-extreme">
+      <span class="term">certain</span>
+      <span class="pct">~100%</span>
+      <span class="bar-wrap"><span class="bar" style="left:99%;width:1%"></span></span>
+      <span class="center">100</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">highly likely</span>
+      <span class="pct">80–95%</span>
+      <span class="bar-wrap"><span class="bar" style="left:80%;width:15%"></span></span>
+      <span class="center">~88</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">likely</span>
+      <span class="pct">60–80%</span>
+      <span class="bar-wrap"><span class="bar" style="left:60%;width:20%"></span></span>
+      <span class="center">~70</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">possible</span>
+      <span class="pct">40–60%</span>
+      <span class="bar-wrap"><span class="bar" style="left:40%;width:20%"></span></span>
+      <span class="center">~50</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">unlikely</span>
+      <span class="pct">20–40%</span>
+      <span class="bar-wrap"><span class="bar" style="left:20%;width:20%"></span></span>
+      <span class="center">~30</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">highly unlikely</span>
+      <span class="pct">5–20%</span>
+      <span class="bar-wrap"><span class="bar" style="left:5%;width:15%"></span></span>
+      <span class="center">~12</span>
+    </div>
+    <div class="kk-row">
+      <span class="term">remote</span>
+      <span class="pct">1–5%</span>
+      <span class="bar-wrap"><span class="bar" style="left:1%;width:4%"></span></span>
+      <span class="center">~3</span>
+    </div>
+    <div class="kk-row k-impossible">
+      <span class="term">impossible</span>
+      <span class="pct">~0%</span>
+      <span class="bar-wrap"><span class="bar" style="left:0;width:1%"></span></span>
+      <span class="center">0</span>
+    </div>
+
+    <div class="kk-axis">
+      <span></span>
+      <span></span>
+      <span class="axis-bar"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="kk-tags">
+    <h3>Special tags · probability not applicable</h3>
+    <div class="kk-tag-row">
+      <span class="term">log</span>
+      <span class="desc">Recording without claim — pile of links, snippets, observations. Not arguing for anything.</span>
+    </div>
+    <div class="kk-tag-row">
+      <span class="term">emotional</span>
+      <span class="desc">Felt, not endorsed. Writing entangled with complex feelings; not a probabilistic claim about the world.</span>
+    </div>
+  </div>
+
+  <div class="kk-lineage">
+    <h4>Where it comes from</h4>
+    <p style="margin:0 0 8px 0"><b>Sherman Kent</b> (CIA, 1964) wrote <em>Words of Estimative Probability</em> after a 1951 intelligence estimate said Soviet attack on Yugoslavia was a "serious possibility" — which one reader took to mean ~20%, the writer had meant ~65%. The 60-point misreading prompted him to propose pinned verbal terms: <em>almost certain · probable · chances about even · probably not · almost certainly not</em>.</p>
+    <p style="margin:0 0 8px 0"><b>Rachel Kesselman</b> (American Military University thesis, 2008) studied decades of intelligence reports and showed Kent's terms still drifted in actual usage. She proposed the eight-level vocabulary above as a tighter standard.</p>
+    <p style="margin:0 0 8px 0"><b>ICD 203</b> (the current US intelligence directive) uses a 7-step variant: <em>Almost No Chance · Very Unlikely · Unlikely · Roughly Even Chance · Likely · Very Likely · Almost Certain</em> with explicit probability ranges.</p>
+    <p style="margin:0"><b>Gwern</b> adopted Kesselman's eight terms and added two non-probability tags (<em>log</em>, <em>emotional</em>) for cases where "how likely" doesn't apply.</p>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px">The empirical reason this exists at all: studies show people read "likely" anywhere from 25% to 90%; "probable" from 30% to 90%. Standardizing the vocabulary doesn't fix the spread completely, but shrinks it.</p>

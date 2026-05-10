@@ -1,0 +1,145 @@
+<style>
+  .cmp-wrap {
+    margin-top: 18px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #0c0a08;
+  }
+  .cmp-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    background: rgba(216,207,191,0.04);
+  }
+  .cmp-grid .cell {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(216,207,191,0.08);
+    border-right: 1px solid rgba(216,207,191,0.08);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12.5px; line-height: 1.55;
+    color: rgba(216,207,191,0.85);
+  }
+  .cmp-grid .cell:nth-child(3n) { border-right: 0; }
+  .cmp-grid .col-head {
+    background: rgba(216,207,191,0.08);
+    color: #f3ead7;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 18px 18px;
+    font-size: 13px;
+  }
+  .cmp-grid .col-head .tag {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px;
+    color: rgba(243,234,215,0.7); background: rgba(243,234,215,0.08);
+    vertical-align: middle;
+    font-weight: 300;
+  }
+  .cmp-grid .col-head.recommended { background: rgba(207,233,184,0.10); }
+  .cmp-grid .col-head.recommended .tag {
+    background: rgba(207,233,184,0.16);
+    color: #cfe9b8;
+  }
+  .cmp-grid .row-label {
+    background: rgba(216,207,191,0.06);
+    color: rgba(216,207,191,0.5);
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    align-items: center;
+    display: flex;
+  }
+  .cmp-grid b { color: #f3ead7; font-weight: 500; }
+  .cmp-grid .win {
+    border-left: 2px solid rgba(207,233,184,0.5);
+    background: rgba(207,233,184,0.04);
+  }
+  .cmp-grid .neutral { color: rgba(216,207,191,0.7); }
+
+  .cmp-summary {
+    padding: 24px 28px;
+    background: rgba(216,207,191,0.03);
+    color: rgba(216,207,191,0.85);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 13px; line-height: 1.6;
+  }
+  .cmp-summary h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 12px 0;
+  }
+  .cmp-summary b { color: #f3ead7; font-weight: 500; }
+  .cmp-summary code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    background: rgba(243,234,215,0.08);
+    color: #f3ead7;
+    padding: 1px 6px; border-radius: 3px;
+  }
+</style>
+
+<h2>Astro vs. Vite + React + MDX</h2>
+<p class="subtitle">Both use MDX as the file format. The difference is what builds and ships it.</p>
+
+<div class="cmp-wrap">
+  <div class="cmp-grid">
+    <div class="cell row-label"></div>
+    <div class="cell col-head">A · Vite + React + MDX <span class="tag">extends current</span></div>
+    <div class="cell col-head recommended">B · Astro <span class="tag">recommended now</span></div>
+
+    <div class="cell row-label">Architecture</div>
+    <div class="cell">SPA-first. React app with SSG bolted on via <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">vite-ssg</code> to pre-render routes.</div>
+    <div class="cell win">Content-first. Static HTML by default. Interactivity is opt-in per component ("islands"). Built for sites like this.</div>
+
+    <div class="cell row-label">JS shipped</div>
+    <div class="cell">React runtime + your components on every page, even pure-prose essays. Mitigatable but not free.</div>
+    <div class="cell win"><b>Zero JS by default.</b> Essay prose ships as static HTML. JS only loads for components you mark <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">client:*</code>.</div>
+
+    <div class="cell row-label">Routing</div>
+    <div class="cell">Add <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">vite-plugin-pages</code> + <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">react-router</code>. Glue work.</div>
+    <div class="cell win">File-based routing built-in. <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">src/pages/essays/foo.mdx</code> → <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">/essays/foo</code>. Zero config.</div>
+
+    <div class="cell row-label">Content metadata</div>
+    <div class="cell">Frontmatter via <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">gray-matter</code>. No type validation; you write your own.</div>
+    <div class="cell win"><b>Content collections</b> — typed schemas via zod. Define <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">importance: z.number().min(0).max(10)</code>; build fails if frontmatter is wrong. Catches typos in <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">stance: agree</code> at compile time.</div>
+
+    <div class="cell row-label">Mixing frameworks</div>
+    <div class="cell">React only.</div>
+    <div class="cell">React, Svelte, Vue, vanilla — all coexist. Useful if you ever want a Svelte interactive demo in an essay without React overhead.</div>
+
+    <div class="cell row-label">Migration cost</div>
+    <div class="cell win"><b>~zero.</b> Add files for essays; homepage untouched.</div>
+    <div class="cell">Refactor existing 5 components into Astro page + React islands. AmbientClock & ThemeToggle become <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">client:load</code> islands; GrainOverlay & Footer become static. ~half-day of careful work.</div>
+
+    <div class="cell row-label">Long-term DX for content</div>
+    <div class="cell">Workable. As you add 50+ essays, the SPA-shaped tooling feels increasingly like fighting the framework.</div>
+    <div class="cell win">Designed for this case. Adding the 50th essay feels exactly like adding the 1st.</div>
+
+    <div class="cell row-label">Tailwind v4</div>
+    <div class="cell">Already wired up.</div>
+    <div class="cell">First-class support; <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">@astrojs/tailwind</code> is plug-and-play.</div>
+
+    <div class="cell row-label">Hosting</div>
+    <div class="cell">Static HTML output to any CDN.</div>
+    <div class="cell">Static HTML output to any CDN.</div>
+
+    <div class="cell row-label">Lockin / portability</div>
+    <div class="cell">Markdown content is portable; React layouts less so.</div>
+    <div class="cell">Markdown is portable; <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">.astro</code> templates are framework-specific but small.</div>
+  </div>
+
+  <div class="cmp-summary">
+    <h3>Honest revised lean: B · Astro</h3>
+    <p style="margin:0 0 10px 0">I led with A because it's lower-friction. But re-examining against <b>your specific values</b> — minimalist, dislikes redundancy, prefers static-on-CDN, taste for typographic precision — Astro fits better:</p>
+    <ul style="padding-left:18px;margin:0 0 12px 0">
+      <li><b>Zero JS on essay reads</b> — readers' phones don't run a React runtime to display prose. Aligns with minimalism in a deep way.</li>
+      <li><b>Typed content schemas</b> — your eight-level Kesselman ladder gets compile-time enforcement. <code style="font-family:'IBM Plex Mono',monospace;font-size:11px">confidence: hightly likely</code> (typo) fails the build, not at render-time.</li>
+      <li><b>Migration cost is bounded</b> — your homepage has 5 small components. ~half-day of tightly-scoped work. The interactive bits (clock, theme toggle) keep working as React islands.</li>
+      <li><b>Right shape for the next 5 years</b> — you're starting an essay practice. The framework you commit to now matters more than today's friction.</li>
+    </ul>
+    <p style="margin:0">Pick A if you want zero risk to the homepage and want to ship essays this weekend. Pick B if you'd rather invest the half-day to land on the right substrate for the long arc.</p>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Tell me which.</p>

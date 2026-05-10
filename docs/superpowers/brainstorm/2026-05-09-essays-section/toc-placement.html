@@ -1,0 +1,266 @@
+<style>
+  .tp-stack { display: flex; flex-direction: column; gap: 26px; margin-top: 22px; }
+  .tp-mock {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 26px 30px 30px 30px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', Palatino, Georgia, serif;
+  }
+  .tp-mock:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.25); }
+  .tp-letter {
+    position: absolute; top: 12px; right: 16px;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(216,207,191,0.45);
+  }
+  .tp-tag-line {
+    text-align: center;
+    margin: 24px 0 28px 0;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.6);
+  }
+  .tp-tag-line .reco {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 9px; letter-spacing: 0.2em;
+    background: rgba(243,234,215,0.16); color: #f3ead7;
+    padding: 2px 8px; border-radius: 999px; vertical-align: middle;
+  }
+  .tp-back {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    position: absolute; top: 26px; left: 30px;
+  }
+
+  .body-style { font-size: 13.5px; line-height: 1.62; color: rgba(216,207,191,0.88); }
+  .body-style .title {
+    font-size: 26px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .body-style .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 14px; margin-bottom: 14px;
+  }
+  .body-style .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10px; line-height: 1.95; letter-spacing: 0.03em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 8px 0; margin-bottom: 18px;
+  }
+  .body-style .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9px;
+    display: inline-block; width: 88px; color: rgba(216,207,191,0.42);
+  }
+  .body-style h2 {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 18px; font-weight: 500; color: #f3ead7;
+    margin: 18px 0 8px 0; letter-spacing: -0.005em;
+  }
+  .body-style p { margin: 0 0 11px 0; }
+  .body-style sup { font-size: 9.5px; color: rgba(243,234,215,0.7); padding: 0 1px; }
+
+  /* LAYOUT A — TOC in right rail (refined) */
+  .lay-a {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) 220px;
+    gap: 36px;
+  }
+  @media (max-width: 980px) { .lay-a { grid-template-columns: 1fr; } }
+  .lay-a .rail-a {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 11px; line-height: 1.5;
+    color: rgba(216,207,191,0.55);
+    padding-top: 60px;
+  }
+  .lay-a .toc-block {
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(216,207,191,0.12);
+  }
+  .lay-a .toc-block .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.4);
+    margin-bottom: 10px; font-style: normal;
+  }
+  .lay-a .toc-block .row {
+    font-style: italic;
+    padding: 3px 0;
+    color: rgba(216,207,191,0.55);
+    font-size: 12px;
+  }
+  .lay-a .toc-block .row.active {
+    color: #f3ead7;
+    font-style: normal;
+  }
+  .lay-a .sn {
+    margin-bottom: 16px; padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+  }
+  .lay-a .sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 14px; }
+
+  /* LAYOUT B — Gwern-style left TOC + body + right rail */
+  .lay-b {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 560px) 200px;
+    gap: 38px;
+  }
+  @media (max-width: 1180px) {
+    .lay-b { grid-template-columns: 1fr; }
+    .lay-b .left-toc { display: none; }
+    .lay-b .right-sn { display: none; }
+  }
+  .lay-b .left-toc {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: rgba(216,207,191,0.55);
+    padding-top: 64px;
+    position: relative;
+  }
+  .lay-b .left-toc .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.4);
+    margin-bottom: 12px;
+  }
+  .lay-b .left-toc .toc-h2 {
+    font-size: 11.5px;
+    line-height: 1.5;
+    padding: 4px 0;
+    color: rgba(216,207,191,0.6);
+    font-style: italic;
+    cursor: pointer;
+  }
+  .lay-b .left-toc .toc-h2:hover { color: #f3ead7; }
+  .lay-b .left-toc .toc-h2.active {
+    color: #f3ead7;
+    font-style: normal;
+  }
+  .lay-b .left-toc .toc-h3 {
+    font-size: 10.5px;
+    line-height: 1.5;
+    padding: 2px 0 2px 14px;
+    color: rgba(216,207,191,0.42);
+    font-style: italic;
+  }
+  .lay-b .left-toc .toc-h3.active { color: rgba(216,207,191,0.78); font-style: normal; }
+  .lay-b .right-sn {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; line-height: 1.5;
+    color: rgba(216,207,191,0.55);
+    padding-top: 60px;
+  }
+  .lay-b .right-sn .sn {
+    margin-bottom: 16px; padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+  }
+  .lay-b .right-sn .sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 14px; }
+
+  .tp-pros {
+    margin-top: 16px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.6;
+    color: rgba(216,207,191,0.7);
+    padding-top: 14px;
+    border-top: 1px solid rgba(216,207,191,0.12);
+  }
+  .tp-pros b { color: #f3ead7; font-weight: 500; letter-spacing: 0.04em; }
+</style>
+
+<h2>TOC placement · two layouts to choose between</h2>
+<p class="subtitle">Mobile behavior is the same in both: chip + slide-down drawer. Difference is only desktop.</p>
+
+<div class="tp-stack">
+
+  <!-- LAYOUT A — TOC in right rail (refined to feel less docs-y) -->
+  <div class="tp-mock" data-choice="rail" onclick="toggleSelect(this)">
+    <div class="tp-letter">A</div>
+    <div class="tp-back">← essays</div>
+    <div class="tp-tag-line">A · TOC in right rail (refined)</div>
+
+    <div class="lay-a">
+      <div class="body-style">
+        <div class="title">On free will</div>
+        <div class="sub">Reading Strawson against the compatibilists</div>
+        <div class="meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+        <h2>The compatibilist subject-change</h2>
+        <p>The compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question entirely untouched.</p>
+        <h2>Strawson's regress</h2>
+        <p>Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character.</p>
+      </div>
+
+      <div class="rail-a">
+        <div class="toc-block">
+          <div class="label">Outline</div>
+          <div class="row active">The compatibilist subject-change</div>
+          <div class="row">Strawson's regress</div>
+          <div class="row">What this leaves of moral responsibility</div>
+        </div>
+        <div class="sn"><span class="num">¹</span>Frankfurt cases sidestep the deeper issue.</div>
+        <div class="sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+      </div>
+    </div>
+
+    <div class="tp-pros">
+      <b>A · TOC in right rail (refined)</b> &nbsp; Refined version — italic for inactive entries, cream for active (no border, no chrome). Less docs-feeling than before.
+      <span style="opacity:0.7"> &nbsp; ↓ still shares space with sidenotes — top-of-page sidenotes get pushed down by the TOC &nbsp; ↑ 2-column layout, simpler responsive behavior &nbsp; ↑ TOC is at the same scroll position as sidenotes, easy to glance at</span>
+    </div>
+  </div>
+
+  <!-- LAYOUT B — Gwern-style left sidebar -->
+  <div class="tp-mock" data-choice="leftrail" onclick="toggleSelect(this)">
+    <div class="tp-letter">B</div>
+    <div class="tp-back" style="left:36px">← essays</div>
+    <div class="tp-tag-line">B · Left sidebar TOC (Gwern-style) <span class="reco">your suggestion</span></div>
+
+    <div class="lay-b">
+      <div class="left-toc">
+        <div class="label">Outline</div>
+        <div class="toc-h2 active">The compatibilist subject-change</div>
+        <div class="toc-h3 active">Frankfurt cases</div>
+        <div class="toc-h3">The original question</div>
+        <div class="toc-h2">Strawson's regress</div>
+        <div class="toc-h2">What this leaves of moral responsibility</div>
+      </div>
+
+      <div class="body-style">
+        <div class="title">On free will</div>
+        <div class="sub">Reading Strawson against the compatibilists</div>
+        <div class="meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+        <h2>The compatibilist subject-change</h2>
+        <p>The compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question entirely untouched.</p>
+        <h2>Strawson's regress</h2>
+        <p>Strawson<sup>2</sup> presses harder. To be truly responsible…</p>
+      </div>
+
+      <div class="right-sn">
+        <div class="sn"><span class="num">¹</span>Frankfurt cases sidestep the deeper issue.</div>
+        <div class="sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+      </div>
+    </div>
+
+    <div class="tp-pros">
+      <b>B · Left sidebar TOC (Gwern-style)</b> &nbsp; Three-column layout. TOC has its own home on the left; sidenotes get the full right rail. Hierarchical (H2 + nested H3). Both fixed/sticky.
+      <span style="opacity:0.7"> &nbsp; ↑ TOC and sidenotes don't compete &nbsp; ↑ supports nested headings well &nbsp; ↑ feels distinctly "essay" not "docs" &nbsp; ↓ requires ≥1180px wide; below that, TOC drops to mobile chip + drawer behavior &nbsp; ↓ slightly narrower body (~560px vs 600px)</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Click your pick.</p>

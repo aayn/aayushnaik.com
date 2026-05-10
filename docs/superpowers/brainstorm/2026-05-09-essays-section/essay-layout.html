@@ -1,0 +1,230 @@
+<style>
+  .layout-stack { display: flex; flex-direction: column; gap: 22px; margin-top: 18px; }
+  .lo-mock {
+    background: #0c0a08;
+    color: #d8cfbf;
+    border-radius: 6px;
+    padding: 26px 30px 30px 30px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', 'Palatino Linotype', Palatino, Georgia, serif;
+  }
+  .lo-mock:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.25); }
+
+  .lo-letter {
+    position: absolute; top: 12px; right: 16px;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(216,207,191,0.45);
+  }
+  .lo-reco {
+    display: inline-block;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    background: rgba(243,234,215,0.16); color: #f3ead7;
+    padding: 2px 8px; border-radius: 999px; vertical-align: middle;
+    margin-left: 8px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+  }
+  .lo-eyebrow {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5); margin-bottom: 10px;
+  }
+  .lo-back {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(216,207,191,0.5);
+    position: absolute; top: 26px; left: 30px;
+  }
+
+  .lo-a-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) 220px;
+    gap: 36px;
+    margin-top: 36px;
+  }
+  @media (max-width: 980px) {
+    .lo-a-grid { grid-template-columns: 1fr; gap: 14px; }
+    .lo-a-grid .rail { display: none; }
+  }
+  .lo-a-grid .body { font-size: 14px; line-height: 1.62; color: rgba(216,207,191,0.88); }
+  .lo-a-grid .body .title {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px;
+  }
+  .lo-a-grid .body .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 15px; margin-bottom: 18px;
+  }
+  .lo-a-grid .body .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; line-height: 1.95; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 10px 0; margin-bottom: 22px;
+  }
+  .lo-a-grid .body .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9.5px;
+    display: inline-block; width: 92px; color: rgba(216,207,191,0.42);
+  }
+  .lo-a-grid .body p { margin: 0 0 12px 0; }
+  .lo-a-grid .body .dropcap {
+    float: left; font-size: 44px; line-height: 0.85;
+    padding-right: 6px; padding-top: 4px;
+    color: #f3ead7;
+  }
+  .lo-a-grid .body sup { font-size: 9.5px; color: rgba(243,234,215,0.7); padding: 0 1px; }
+
+  .lo-a-grid .rail {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 10.5px; line-height: 1.5;
+    color: rgba(216,207,191,0.55);
+    padding-top: 64px;
+  }
+  .lo-a-grid .rail .sn {
+    margin-bottom: 18px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(216,207,191,0.18);
+  }
+  .lo-a-grid .rail .sn .num { color: rgba(216,207,191,0.4); display: inline-block; width: 14px; }
+
+  .lo-b-frame { margin: 36px auto 0 auto; max-width: 640px; }
+  .lo-b-frame .body { font-size: 14px; line-height: 1.62; color: rgba(216,207,191,0.88); }
+  .lo-b-frame .body .title {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: #f3ead7; margin-bottom: 4px; text-align: center;
+  }
+  .lo-b-frame .body .sub {
+    font-style: italic; color: rgba(243,234,215,0.6); font-size: 15px;
+    margin-bottom: 18px; text-align: center;
+  }
+  .lo-b-frame .body .meta {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; line-height: 1.95; letter-spacing: 0.04em;
+    color: rgba(216,207,191,0.78);
+    border-top: 1px solid rgba(216,207,191,0.16);
+    border-bottom: 1px solid rgba(216,207,191,0.16);
+    padding: 10px 0; margin-bottom: 22px;
+    text-align: left; display: inline-block; min-width: 320px;
+  }
+  .lo-b-frame .meta-wrap { text-align: center; margin-bottom: 22px; }
+  .lo-b-frame .body .meta .k {
+    text-transform: uppercase; letter-spacing: 0.16em; font-size: 9.5px;
+    display: inline-block; width: 92px; color: rgba(216,207,191,0.42);
+  }
+  .lo-b-frame .body p { margin: 0 0 12px 0; }
+  .lo-b-frame .body .dropcap {
+    float: left; font-size: 44px; line-height: 0.85;
+    padding-right: 6px; padding-top: 4px;
+    color: #f3ead7;
+  }
+  .lo-b-frame .body sup {
+    font-size: 9.5px; color: #f3ead7; padding: 0 2px;
+    border-bottom: 1px dotted rgba(243,234,215,0.4);
+    cursor: help; position: relative;
+  }
+  .popnote {
+    display: inline-block; background: #1a1612;
+    border: 1px solid rgba(216,207,191,0.18);
+    color: rgba(216,207,191,0.78);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 11px; line-height: 1.5;
+    padding: 8px 12px; margin: 4px 0; width: 280px;
+    position: absolute; right: -40px; top: 22px; z-index: 5;
+    border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .popnote::before {
+    content: ''; position: absolute; left: 24px; top: -6px;
+    width: 10px; height: 10px; background: #1a1612;
+    border-left: 1px solid rgba(216,207,191,0.18);
+    border-top: 1px solid rgba(216,207,191,0.18);
+    transform: rotate(45deg);
+  }
+
+  .lo-pros {
+    margin-top: 14px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12px; line-height: 1.6; color: rgba(216,207,191,0.7);
+    padding-top: 14px; border-top: 1px solid rgba(216,207,191,0.12);
+  }
+  .lo-pros b { color: #f3ead7; font-weight: 500; letter-spacing: 0.04em; }
+</style>
+
+<h2>Essay page layout</h2>
+<p class="subtitle">Both versions use the dark-first / serif-body / monospace-meta direction we just settled. The difference is how marginalia behave.</p>
+
+<div class="layout-stack">
+
+  <div class="lo-mock" data-choice="rail" onclick="toggleSelect(this)">
+    <div class="lo-letter">A</div>
+    <div class="lo-back">← essays</div>
+    <div class="lo-eyebrow" style="text-align:center;margin-top:30px">A · Right-rail marginalia <span class="lo-reco">Recommended</span></div>
+
+    <div class="lo-a-grid">
+      <div class="body">
+        <div class="title">On free will</div>
+        <div class="sub">Reading Strawson against the compatibilists</div>
+
+        <div class="meta">
+          <div><span class="k">Importance</span>7 / 10</div>
+          <div><span class="k">Confidence</span>likely</div>
+          <div><span class="k">Status</span>in progress</div>
+          <div><span class="k">Stance</span>withholding</div>
+        </div>
+
+        <p><span class="dropcap">T</span>he compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question — the one that animated the debate — entirely untouched.</p>
+
+        <p>Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character. But your character is the product of nature and nurture, neither of which you chose. The regress<sup>3</sup> is unavoidable, and at the bottom there is nobody at home.</p>
+
+        <p>This argument is what makes me suspicious of compatibilism even in its most sophisticated forms…</p>
+      </div>
+      <div class="rail">
+        <div class="sn"><span class="num">¹</span>Frankfurt-style cases sidestep the deeper issue rather than resolving it.</div>
+        <div class="sn"><span class="num">²</span>Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</div>
+        <div class="sn"><span class="num">³</span>To choose your character you'd need a prior character that did the choosing — and so on, forever.</div>
+      </div>
+    </div>
+
+    <div class="lo-pros">
+      <b>A · Right-rail marginalia</b> &nbsp; Tufte/Gwern canonical. Notes always visible on desktop, anchored next to the line they reference. Mobile: rail collapses, markers expand inline on tap.
+      <span style="opacity:0.7"> &nbsp; ✓ true Tufte feel &nbsp; ✓ marginalia visible at a glance &nbsp; ✓ honors "compressed" with tighter line-height + narrower body</span>
+    </div>
+  </div>
+
+  <div class="lo-mock" data-choice="popover" onclick="toggleSelect(this)">
+    <div class="lo-letter">B</div>
+    <div class="lo-back">← essays</div>
+    <div class="lo-eyebrow" style="text-align:center;margin-top:30px">B · Single column · marginalia hover-to-reveal</div>
+
+    <div class="lo-b-frame">
+      <div class="body">
+        <div class="title">On free will</div>
+        <div class="sub">Reading Strawson against the compatibilists</div>
+
+        <div class="meta-wrap">
+          <div class="meta">
+            <div><span class="k">Importance</span>7 / 10</div>
+            <div><span class="k">Confidence</span>likely</div>
+            <div><span class="k">Status</span>in progress</div>
+            <div><span class="k">Stance</span>withholding</div>
+          </div>
+        </div>
+
+        <p><span class="dropcap">T</span>he compatibilist move<sup>1</sup> feels like changing the subject. If we redefine "free" to mean "uncoerced," we get a notion that fits the world but leaves the original question — the one that animated the debate — entirely untouched.</p>
+
+        <p style="position:relative">Strawson<sup>2</sup> presses harder. To be truly responsible, you would have to be the cause of your own character. <span class="popnote">² Galen Strawson, "The Impossibility of Moral Responsibility" (1994).</span> But your character is the product of nature and nurture, neither of which you chose.</p>
+
+        <p>This argument is what makes me suspicious of compatibilism even in its most sophisticated forms…</p>
+      </div>
+    </div>
+
+    <div class="lo-pros">
+      <b>B · Single column · hover popover</b> &nbsp; Body centered, no right rail. Markers reveal a popover on hover or tap. More minimal, simpler responsive behavior.
+      <span style="opacity:0.7"> &nbsp; ↓ less Tuftish &nbsp; ↓ marginalia hidden until interacted &nbsp; ↑ better default on narrower screens (no awkward midsize zone)</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">A is the default Tufte/Gwern shape; B is the safer modern web default. Click your pick — or tell me what to tweak.</p>

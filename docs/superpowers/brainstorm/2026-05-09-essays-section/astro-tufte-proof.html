@@ -1,0 +1,252 @@
+<style>
+  .proof-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  @media (max-width: 1100px) { .proof-wrap { grid-template-columns: 1fr; } }
+  .pf-card {
+    background: #0c0a08;
+    border-radius: 6px;
+    padding: 22px 24px;
+    color: rgba(216,207,191,0.85);
+  }
+  .pf-card h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 12px 0;
+  }
+  .pf-card pre {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65;
+    color: rgba(216,207,191,0.85);
+    background: rgba(216,207,191,0.04);
+    padding: 14px 16px;
+    border-radius: 4px;
+    border-left: 2px solid rgba(243,234,215,0.18);
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre;
+  }
+  .pf-card .comment { color: rgba(216,207,191,0.42); font-style: italic; }
+  .pf-card .key { color: #cfe9b8; }
+  .pf-card .str { color: #f3ead7; }
+  .pf-card .tag { color: #ecd1b8; }
+  .pf-card .punct { color: rgba(216,207,191,0.5); }
+
+  .pf-feature-list {
+    margin-top: 18px;
+    background: rgba(216,207,191,0.04);
+    padding: 18px 22px 22px 22px;
+    border-radius: 6px;
+    border-left: 2px solid rgba(243,234,215,0.18);
+  }
+  .pf-feature-list h3 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    color: #f3ead7;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin: 0 0 12px 0;
+  }
+  .pf-feature-list .row {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 22px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(216,207,191,0.06);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+    font-size: 12.5px; line-height: 1.55;
+    color: rgba(216,207,191,0.78);
+  }
+  .pf-feature-list .row:last-child { border-bottom: none; }
+  .pf-feature-list .row b {
+    color: #f3ead7; font-weight: 500;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+  }
+</style>
+
+<h2>Astro · Tufte/Gwern compatibility, demonstrated</h2>
+<p class="subtitle">Astro outputs static HTML. You write whatever HTML, CSS, and components you want on top. There is no design opinion; there is no UX opinion; there is only "how files are organized and built."</p>
+
+<div class="proof-wrap">
+
+  <!-- File structure -->
+  <div class="pf-card">
+    <h3>Project structure</h3>
+<pre><span class="comment">// what you'd add to your repo</span>
+src/
+├── content/
+│   └── essays/
+│       ├── on-free-will.mdx
+│       └── moral-weight-of-suffering.mdx
+├── pages/
+│   ├── index.astro              <span class="comment">// homepage</span>
+│   ├── essays/
+│   │   ├── index.astro          <span class="comment">// list</span>
+│   │   ├── glossary.astro       <span class="comment">// glossary</span>
+│   │   └── [slug].astro         <span class="comment">// essay</span>
+├── components/
+│   ├── Sidenote.astro
+│   ├── MetaBlock.astro
+│   ├── Figure.astro
+│   ├── Pullquote.astro
+│   ├── AmbientClock.tsx         <span class="comment">// React island</span>
+│   └── ThemeToggle.tsx          <span class="comment">// React island</span>
+├── layouts/
+│   └── EssayLayout.astro        <span class="comment">// Tufte layout</span>
+└── content.config.ts            <span class="comment">// zod schema</span></pre>
+  </div>
+
+  <!-- Sample essay -->
+  <div class="pf-card">
+    <h3>What an essay file looks like</h3>
+<pre><span class="comment">// src/content/essays/on-free-will.mdx</span>
+<span class="punct">---</span>
+<span class="key">title</span><span class="punct">:</span> <span class="str">"On free will"</span>
+<span class="key">subtitle</span><span class="punct">:</span> <span class="str">"Reading Strawson against
+  the compatibilists"</span>
+<span class="key">importance</span><span class="punct">:</span> 7
+<span class="key">confidence</span><span class="punct">:</span> <span class="str">likely</span>
+<span class="key">status</span><span class="punct">:</span> <span class="str">in progress</span>
+<span class="key">stance</span><span class="punct">:</span> <span class="str">withholding</span>
+<span class="punct">---</span>
+
+The compatibilist move <span class="tag">&lt;Sidenote&gt;</span>Frankfurt
+cases sidestep the deeper issue.<span class="tag">&lt;/Sidenote&gt;</span>
+feels like changing the subject. If we redefine
+"free" to mean "uncoerced," we get a notion that
+fits the world but leaves the original question
+entirely untouched.
+
+Strawson <span class="tag">&lt;Sidenote&gt;</span>Galen Strawson, "The
+Impossibility of Moral Responsibility" (1994).<span class="tag">&lt;/Sidenote&gt;</span>
+presses harder…</pre>
+  </div>
+
+  <!-- Schema -->
+  <div class="pf-card">
+    <h3>Frontmatter validation (free)</h3>
+<pre><span class="comment">// content.config.ts — runs at build time</span>
+<span class="key">import</span> { defineCollection, z } <span class="key">from</span> <span class="str">'astro:content'</span>;
+
+<span class="key">const</span> essays = defineCollection({
+  <span class="key">type</span>: <span class="str">'content'</span>,
+  <span class="key">schema</span>: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    importance: z.number().min(0).max(10),
+    confidence: z.enum([
+      <span class="str">'certain'</span>, <span class="str">'highly likely'</span>, <span class="str">'likely'</span>,
+      <span class="str">'possible'</span>, <span class="str">'unlikely'</span>, <span class="str">'highly unlikely'</span>,
+      <span class="str">'remote'</span>, <span class="str">'impossible'</span>,
+      <span class="str">'log'</span>, <span class="str">'emotional'</span>
+    ]),
+    status: z.enum([
+      <span class="str">'notes'</span>, <span class="str">'draft'</span>,
+      <span class="str">'in progress'</span>, <span class="str">'finished'</span>
+    ]),
+    stance: z.enum([
+      <span class="str">'agree'</span>, <span class="str">'disagree'</span>, <span class="str">'withholding'</span>
+    ]).optional(),
+  }),
+});</pre>
+  </div>
+
+  <!-- Sidenote component -->
+  <div class="pf-card">
+    <h3>The &lt;Sidenote&gt; component</h3>
+<pre><span class="comment">// components/Sidenote.astro</span>
+<span class="punct">---</span>
+<span class="key">interface</span> Props { id?: string }
+<span class="key">const</span> { id } = Astro.props;
+<span class="punct">---</span>
+
+<span class="tag">&lt;span class="sidenote-marker"</span>
+      <span class="tag">data-id={id}&gt;</span>
+  <span class="comment">{/* superscript number */}</span>
+<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;aside class="sidenote"</span>
+       <span class="tag">data-id={id}&gt;</span>
+  <span class="tag">&lt;slot</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/aside&gt;</span>
+
+<span class="tag">&lt;style&gt;</span>
+  <span class="comment">/* CSS Grid: body left, rail right */</span>
+  <span class="comment">/* @media (max-width:760px): inline expand */</span>
+  <span class="comment">/* position: sticky for the close ✕ */</span>
+<span class="tag">&lt;/style&gt;</span>
+
+<span class="comment">// + a tiny &lt;script&gt; for tap-to-expand</span>
+<span class="comment">// runs only on essay pages, ~1 KB</span></pre>
+  </div>
+
+</div>
+
+<div class="pf-feature-list">
+  <h3>Every feature we've designed, mapped to Astro</h3>
+  <div class="row">
+    <span><b>metacommentary block</b></span>
+    <span>Read frontmatter in the layout, render the monospace meta grid. Plain HTML/CSS.</span>
+  </div>
+  <div class="row">
+    <span><b>importance/confidence/status/stance</b></span>
+    <span>Typed by zod schema; build fails on typos (<code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">stance: agreee</code> caught at build, not at runtime).</span>
+  </div>
+  <div class="row">
+    <span><b>right-rail sidenotes (desktop)</b></span>
+    <span>CSS Grid in <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">EssayLayout.astro</code>. Pure CSS — no framework involved.</span>
+  </div>
+  <div class="row">
+    <span><b>mobile inline-expand notes</b></span>
+    <span>~1 KB vanilla JS in a <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">&lt;script&gt;</code> tag inside <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">Sidenote.astro</code>. No React needed.</span>
+  </div>
+  <div class="row">
+    <span><b>position: sticky close ✕</b></span>
+    <span>Pure CSS. Astro doesn't touch CSS — it just emits whatever you write.</span>
+  </div>
+  <div class="row">
+    <span><b>scroll restoration on close</b></span>
+    <span>Same vanilla JS handler. ~10 lines.</span>
+  </div>
+  <div class="row">
+    <span><b>dropcaps</b></span>
+    <span><code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">.essay-body p:first-of-type::first-letter</code> in CSS. Zero JS.</span>
+  </div>
+  <div class="row">
+    <span><b>glossary page</b></span>
+    <span><code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">src/pages/essays/glossary.astro</code>. Just another page.</span>
+  </div>
+  <div class="row">
+    <span><b>meta-block labels link to glossary</b></span>
+    <span>The <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">MetaBlock.astro</code> renders <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">&lt;a href="/essays/glossary#confidence"&gt;</code> on each label. Pure HTML.</span>
+  </div>
+  <div class="row">
+    <span><b>Kesselman ladder graphic on glossary</b></span>
+    <span>HTML + CSS. Same component you saw on screen earlier; ports as-is.</span>
+  </div>
+  <div class="row">
+    <span><b>theme toggle (dark/light)</b></span>
+    <span>Existing React component as <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">&lt;ThemeToggle client:load /&gt;</code>. Hydrates only this island.</span>
+  </div>
+  <div class="row">
+    <span><b>ambient clock canvas</b></span>
+    <span>Existing React component as <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">&lt;AmbientClock client:idle /&gt;</code>. Same code; islanded.</span>
+  </div>
+  <div class="row">
+    <span><b>typography (Iowan, Source Serif, Plex Mono, Space Grotesk)</b></span>
+    <span>Self-hosted woff2 + <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">@font-face</code> in global CSS. Astro is invisible here.</span>
+  </div>
+  <div class="row">
+    <span><b>tailwind v4</b></span>
+    <span><code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(243,234,215,0.08);padding:1px 5px;border-radius:3px;color:#f3ead7">@astrojs/tailwind</code> integration. Plug-and-play.</span>
+  </div>
+  <div class="row">
+    <span><b>future weird thing you want</b></span>
+    <span>Drop in any HTML/CSS/JS, any React/Svelte/Vue island, any custom MDX component. Astro doesn't constrain.</span>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">Astro is a <em>build tool</em>, not a UX framework. It cares about <em>how</em> things get to the browser, not <em>what</em> things look like once they're there. Tufte/Gwern aesthetics live in the HTML/CSS/components — none of which Astro touches.</p>

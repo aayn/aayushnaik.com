@@ -628,7 +628,7 @@ This is the section that the user explicitly asked to retain — every feature d
 
 ## Reference mockups
 
-All brainstormed mockups are persisted in `.superpowers/brainstorm/8370-1778347383/content/`. Source-of-truth for visual details:
+All brainstormed mockups are persisted in `docs/superpowers/brainstorm/2026-05-09-essays-section/` (committed to git). Open any `.html` file directly in a browser to view the validated visual. Source-of-truth for visual details:
 
 | Decision | Reference file |
 |---|---|
