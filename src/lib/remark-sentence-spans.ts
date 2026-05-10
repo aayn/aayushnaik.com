@@ -2,8 +2,14 @@
 // Remark plugin: wraps each sentence in body text in <span data-sentence>.
 // Used by Sidenote.astro's mobile expand mechanic to find sentence boundaries
 // without runtime regex (which is fragile around abbreviations and decimals).
+//
+// We use *paired* html nodes (open `<span data-sentence>` + close `</span>`)
+// as siblings in the paragraph children list rather than a single html node
+// with a fixed string. That way non-text inline children — emphasis, links,
+// inlineCode, mdxJsxTextElement (e.g. <Sidenote/>), etc. — survive intact
+// inside their sentence span.
 
-import type { Root, Paragraph, PhrasingContent } from 'mdast';
+import type { Root, Paragraph, PhrasingContent, Text } from 'mdast';
 import { visit, SKIP } from 'unist-util-visit';
 
 // Common abbreviations to avoid splitting on (case-sensitive).
@@ -14,72 +20,116 @@ const ABBREV = new Set([
   'Jan.', 'Feb.', 'Mar.', 'Apr.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Sept.', 'Oct.', 'Nov.', 'Dec.',
 ]);
 
-function splitSentences(text: string): string[] {
-  // Split on `.`, `!`, or `?` followed by whitespace + capital letter,
-  // but not after an abbreviation.
-  const out: string[] = [];
+const OPEN_SPAN: PhrasingContent = { type: 'html', value: '<span data-sentence>' };
+const CLOSE_SPAN: PhrasingContent = { type: 'html', value: '</span>' };
+
+// Split a single text string into segments at sentence boundaries.
+// Each segment carries its trailing terminator + whitespace. The last
+// segment of a multi-sentence string ends with a `.endsBoundary: false`
+// flag so the caller knows whether to flush before continuing.
+// A segment is either a piece of sentence content (text up to + including
+// a sentence terminator), or a piece of inter-sentence whitespace that
+// should sit OUTSIDE the sentence span as a sibling.
+type Segment =
+  | { kind: 'sentence'; value: string }
+  | { kind: 'gap'; value: string };
+
+function splitTextSegments(text: string): Segment[] {
+  const out: Segment[] = [];
   let buf = '';
   let i = 0;
   while (i < text.length) {
     buf += text[i];
     if (/[.!?]/.test(text[i])) {
-      const next = text.slice(i + 1).match(/^\s+(\S)/);
-      if (next && /[A-Z"'(]/.test(next[1])) {
+      const rest = text.slice(i + 1);
+      const next = rest.match(/^(\s+)(\S)/);
+      if (next && /[A-Z"'(]/.test(next[2])) {
         // Could be a sentence break — check if buf ends in an abbreviation.
         const tail = buf.match(/\b\S+\.?\s*$/)?.[0]?.trim();
         if (!tail || !ABBREV.has(tail)) {
-          out.push(buf.trim());
+          out.push({ kind: 'sentence', value: buf });
+          out.push({ kind: 'gap', value: next[1] });
           buf = '';
-          i += 1 + (text.slice(i + 1).match(/^\s+/)?.[0].length || 0);
+          i += 1 + next[1].length;
           continue;
         }
       } else if (i === text.length - 1) {
-        // Final sentence terminator at end of text.
-        out.push(buf.trim());
+        // Final terminator at end of text — boundary, no trailing gap.
+        out.push({ kind: 'sentence', value: buf });
         buf = '';
       }
     }
     i++;
   }
-  if (buf.trim().length > 0) out.push(buf.trim());
+  if (buf.length > 0) out.push({ kind: 'sentence', value: buf });
   return out;
 }
 
 export function remarkSentenceSpans() {
   return (tree: Root) => {
     visit(tree, 'paragraph', (node: Paragraph) => {
-      // Idempotency check: if the paragraph already has html nodes that look
-      // like our spans, skip.
-      const childrenStr = JSON.stringify(node.children);
-      if (childrenStr.includes('data-sentence')) return SKIP;
+      // Idempotency: skip if we've already wrapped this paragraph.
+      if (
+        node.children.some(
+          (c) => c.type === 'html' && (c as { value: string }).value === '<span data-sentence>'
+        )
+      ) {
+        return SKIP;
+      }
 
-      // Concatenate all phrasing content into a single string. We accept some
-      // loss of inline formatting (links, emphasis) inside sentences for v1.
-      // A more sophisticated version would walk the children and split between
-      // text nodes while preserving inline-formatting siblings — out of scope
-      // for v1.
-      const text = node.children
-        .filter((c) => c.type === 'text')
-        .map((c) => (c as { value: string }).value)
-        .join('');
+      // Walk children sequentially, building up "buckets" of children that
+      // belong to a single sentence. When a text node contains a sentence
+      // boundary we split it, flush the current bucket as a sentence span,
+      // and start a new bucket.
+      const out: PhrasingContent[] = [];
+      let bucket: PhrasingContent[] = [];
 
-      if (!text.trim()) return SKIP;
+      const flushBucket = () => {
+        if (bucket.length === 0) return;
+        // If the bucket only contains pure whitespace text, drop it rather
+        // than emit an empty sentence span.
+        const isAllWhitespace = bucket.every(
+          (c) => c.type === 'text' && /^\s*$/.test((c as Text).value)
+        );
+        if (isAllWhitespace) {
+          // Preserve any whitespace as a sibling so spacing isn't lost.
+          out.push(...bucket);
+          bucket = [];
+          return;
+        }
+        out.push(OPEN_SPAN, ...bucket, CLOSE_SPAN);
+        bucket = [];
+      };
 
-      const sentences = splitSentences(text);
-      if (sentences.length === 0) return SKIP;
+      for (const child of node.children) {
+        if (child.type !== 'text') {
+          bucket.push(child);
+          continue;
+        }
+        const segments = splitTextSegments((child as Text).value);
+        for (const seg of segments) {
+          if (seg.kind === 'gap') {
+            // Boundary between sentences. Close the current span; emit the
+            // whitespace as a sibling so it sits outside both spans.
+            flushBucket();
+            out.push({ type: 'text', value: seg.value });
+          } else {
+            bucket.push({ type: 'text', value: seg.value });
+          }
+        }
+      }
+      flushBucket();
 
-      const newChildren: PhrasingContent[] = sentences.map((s) => ({
-        type: 'html',
-        value: `<span data-sentence>${escapeHtml(s)}</span>`,
-      }));
+      // If the result contains no sentence wrappers (i.e., the paragraph had
+      // no boundary-terminated sentence at all), keep the original children
+      // intact — wrapping a fragment without a terminator would be misleading.
+      const wrappedAny = out.some(
+        (c) => c.type === 'html' && (c as { value: string }).value === '<span data-sentence>'
+      );
+      if (!wrappedAny) return SKIP;
 
-      // Replace children with the wrapped sentences.
-      node.children = newChildren;
+      node.children = out;
       return SKIP;
     });
   };
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

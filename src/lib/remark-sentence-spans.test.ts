@@ -4,6 +4,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkStringify from 'remark-stringify';
 import { remarkSentenceSpans } from './remark-sentence-spans';
+import type { Root, Paragraph } from 'mdast';
 
 async function transform(md: string): Promise<string> {
   const result = await unified()
@@ -44,5 +45,72 @@ describe('remark-sentence-spans', () => {
     const out2 = await transform(out);
     // Don't get nested spans like <span data-sentence><span data-sentence>...
     expect(out2).not.toMatch(/<span data-sentence><span data-sentence>/);
+  });
+});
+
+describe('remark-sentence-spans — inline content preservation', () => {
+  it('preserves non-text inline children inside sentence spans', () => {
+    const tree: Root = {
+      type: 'root',
+      children: [{
+        type: 'paragraph',
+        children: [
+          { type: 'text', value: 'The move ' },
+          { type: 'emphasis', children: [{ type: 'text', value: 'feels' }] },
+          { type: 'text', value: ' wrong. The next.' },
+        ],
+      }],
+    };
+    remarkSentenceSpans()(tree);
+    const p = tree.children[0] as Paragraph;
+    // The emphasis node must still exist somewhere in p.children.
+    const stillHasEmphasis = p.children.some((c) => c.type === 'emphasis');
+    expect(stillHasEmphasis).toBe(true);
+    // There should be exactly two opening sentence spans (for two sentences).
+    const openSpans = p.children.filter(
+      (c) => c.type === 'html' && (c as { value: string }).value === '<span data-sentence>'
+    );
+    expect(openSpans).toHaveLength(2);
+  });
+
+  it('preserves inline links between sentences', () => {
+    const tree: Root = {
+      type: 'root',
+      children: [{
+        type: 'paragraph',
+        children: [
+          { type: 'text', value: 'See ' },
+          { type: 'link', url: '/essays/foo', children: [{ type: 'text', value: 'foo' }] },
+          { type: 'text', value: ' for details. Next sentence.' },
+        ],
+      }],
+    };
+    remarkSentenceSpans()(tree);
+    const p = tree.children[0] as Paragraph;
+    const stillHasLink = p.children.some((c) => c.type === 'link');
+    expect(stillHasLink).toBe(true);
+  });
+
+  it('keeps an inline JSX-like element (simulated as html node) inside its sentence', () => {
+    // Simulating an MDX inline element by using an html node as a stand-in;
+    // mdxJsxTextElement type isn't loaded in the test environment without remark-mdx.
+    const tree: Root = {
+      type: 'root',
+      children: [{
+        type: 'paragraph',
+        children: [
+          { type: 'text', value: 'Foo ' },
+          { type: 'html', value: '<x-marker />' },
+          { type: 'text', value: ' bar. Baz.' },
+        ],
+      }],
+    };
+    remarkSentenceSpans()(tree);
+    const p = tree.children[0] as Paragraph;
+    // The custom html element must survive (other than the open/close span html nodes).
+    const stillHasMarker = p.children.some(
+      (c) => c.type === 'html' && (c as { value: string }).value === '<x-marker />'
+    );
+    expect(stillHasMarker).toBe(true);
   });
 });
