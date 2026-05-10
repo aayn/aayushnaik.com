@@ -1,0 +1,46 @@
+---
+// src/layouts/BaseLayout.astro — shared shell for every page
+import '../styles/global.css';
+import GrainOverlay from '../components/GrainOverlay.astro';
+import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.tsx';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogUrl?: string;
+}
+
+const {
+  title = 'Aayush Naik',
+  description = 'Aayush Naik — Engineer, founder, thinker. Precision in tech, depth in ideas.',
+  ogUrl = 'https://aayushnaik.com',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogUrl} />
+    <script is:inline>
+      // Set dark class before paint to avoid theme-flash
+      const t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+  </head>
+  <body class="bg-white dark:bg-black">
+    <GrainOverlay />
+    <slot />
+    <Footer />
+    <ThemeToggle client:load />
+  </body>
+</html>
