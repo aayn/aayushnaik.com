@@ -172,8 +172,9 @@
         if (markerEl.classList.contains('is-open')) close();
         else open();
       });
-      markerEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+      markerEl.addEventListener('keydown', (e: Event) => {
+        const ke = e as KeyboardEvent;
+        if (ke.key === 'Enter' || ke.key === ' ') {
           e.preventDefault();
           if (markerEl.classList.contains('is-open')) close();
           else open();

@@ -1,0 +1,159 @@
+---
+// src/components/KesselmanLadder.astro — visual confidence ladder
+const rungs = [
+  { term: 'certain',         range: '~100%',  barLeft: 99, barWidth: 1,  approx: '100' },
+  { term: 'highly likely',   range: '80–95%', barLeft: 80, barWidth: 15, approx: '~88' },
+  { term: 'likely',          range: '60–80%', barLeft: 60, barWidth: 20, approx: '~70' },
+  { term: 'possible',        range: '40–60%', barLeft: 40, barWidth: 20, approx: '~50' },
+  { term: 'unlikely',        range: '20–40%', barLeft: 20, barWidth: 20, approx: '~30' },
+  { term: 'highly unlikely', range: '5–20%',  barLeft: 5,  barWidth: 15, approx: '~12' },
+  { term: 'remote',          range: '1–5%',   barLeft: 1,  barWidth: 4,  approx: '~3'  },
+  { term: 'impossible',      range: '~0%',    barLeft: 0,  barWidth: 1,  approx: '0',   impossible: true },
+];
+---
+<div class="kk">
+  <div class="kk-head">The ladder</div>
+
+  <div class="kk-ladder">
+    {rungs.map((r) => (
+      <div class={`kk-row ${r.impossible ? 'k-impossible' : ''}`}>
+        <span class="term">{r.term}</span>
+        <span class="pct">{r.range}</span>
+        <span class="bar-wrap"><span class="bar" style={`left:${r.barLeft}%;width:${r.barWidth}%;`}></span></span>
+        <span class="approx">{r.approx}</span>
+      </div>
+    ))}
+    <div class="kk-axis">
+      <span></span>
+      <span></span>
+      <span class="axis-bar"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="kk-tags">
+    <h4>Special tags · probability not applicable</h4>
+    <div class="kk-tag-row">
+      <span class="term">log</span>
+      <span class="desc">Recording without claim — pile of links, snippets, observations. Not arguing for anything.</span>
+    </div>
+    <div class="kk-tag-row">
+      <span class="term">emotional</span>
+      <span class="desc">Felt, not endorsed. Writing entangled with complex feelings; not a probabilistic claim about the world.</span>
+    </div>
+  </div>
+
+  <div class="kk-lineage">
+    <h4>Where it comes from</h4>
+    <p><strong>Sherman Kent</strong> (CIA, 1964) wrote <em>Words of Estimative Probability</em> after a 1951 intelligence estimate said Soviet attack on Yugoslavia was a "serious possibility" — which one reader took to mean ~20%, the writer had meant ~65%. The 60-point misreading prompted him to propose pinned verbal terms.</p>
+    <p><strong>Rachel Kesselman</strong> (American Military University thesis, 2008) studied decades of intelligence reports and showed Kent's terms still drifted in actual usage. She proposed the eight-level vocabulary above as a tighter standard.</p>
+    <p><strong>Gwern</strong> adopted Kesselman's eight terms and added two non-probability tags (<em>log</em>, <em>emotional</em>) for cases where "how likely" doesn't apply.</p>
+  </div>
+</div>
+
+<style>
+  .kk {
+    background: rgba(216, 207, 191, 0.04);
+    color: var(--meta);
+    border-radius: 6px;
+    padding: 28px 32px 30px 32px;
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+  }
+  .kk-head {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--title);
+    margin-bottom: 16px;
+  }
+  .kk-ladder { margin-bottom: 22px; }
+  .kk-row {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr 50px;
+    gap: 18px;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(216, 207, 191, 0.06);
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .kk-row .term { color: var(--title); font-size: 12px; letter-spacing: 0.04em; }
+  .kk-row .pct { color: var(--dim); font-size: 11px; }
+  .kk-row .bar-wrap {
+    height: 6px;
+    background: rgba(216, 207, 191, 0.08);
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kk-row .bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--meta);
+    border-radius: 999px;
+  }
+  .kk-row.k-impossible .bar { background: var(--stance-disagree); }
+  .kk-row .approx {
+    text-align: right;
+    color: var(--meta);
+    font-size: 11px;
+  }
+  .kk-axis {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr 50px;
+    gap: 18px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(216, 207, 191, 0.10);
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+  }
+  .kk-axis .axis-bar { display: flex; justify-content: space-between; }
+  .kk-tags { margin-bottom: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
+  .kk-tags h4, .kk-lineage h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    color: var(--title);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+  .kk-tag-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 18px;
+    padding: 6px 0;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--meta);
+  }
+  .kk-tag-row .term { color: var(--title); }
+  .kk-tag-row .desc {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 13.5px;
+    color: var(--meta);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  .kk-lineage {
+    padding: 16px 20px;
+    background: rgba(216, 207, 191, 0.04);
+    border-left: 2px solid var(--rule);
+    border-radius: 0 4px 4px 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--meta);
+  }
+  .kk-lineage p { margin: 0 0 8px 0; }
+  .kk-lineage p:last-child { margin-bottom: 0; }
+  .kk-lineage strong { color: var(--title); font-weight: 500; }
+  @media (max-width: 720px) {
+    .kk-row, .kk-axis { grid-template-columns: 100px 60px 1fr 40px; gap: 10px; }
+    .kk-tag-row { grid-template-columns: 90px 1fr; gap: 10px; }
+  }
+</style>

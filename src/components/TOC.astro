@@ -1,0 +1,250 @@
+---
+// src/components/TOC.astro — left sidebar TOC + mobile chip + drawer
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  headings: Heading[];
+}
+const { headings } = Astro.props;
+
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const h2Count = filtered.filter((h) => h.depth === 2).length;
+const showToc = h2Count >= 2;
+---
+{showToc && (
+  <>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-label">Outline</div>
+      <ul>
+        {filtered.map((h) => (
+          <li class={h.depth === 3 ? 'toc-h3' : 'toc-h2'} data-target={h.slug}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="toc-chip-wrap">
+      <button class="toc-chip" type="button" aria-expanded="false">
+        <span class="toc-chip-icon">≡</span>
+        <span class="toc-chip-label">Outline</span>
+        <span class="toc-chip-count">{h2Count} sections</span>
+        <span class="toc-chip-arrow">▾</span>
+      </button>
+      <div class="toc-drawer" hidden>
+        <div class="toc-drawer-head">
+          <span class="toc-drawer-title">Outline</span>
+          <button class="toc-drawer-close" type="button" aria-label="Close outline">×</button>
+        </div>
+        <ul>
+          {filtered.map((h) => (
+            <li class={h.depth === 3 ? 'toc-h3' : 'toc-h2'} data-target={h.slug}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 60px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    color: var(--dim);
+  }
+  @media (max-width: 1179px) { .toc { display: none; } }
+
+  .toc-label {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 12px;
+  }
+  .toc ul { list-style: none; padding: 0; margin: 0; }
+  .toc li {
+    font-size: 11.5px;
+    line-height: 1.5;
+    padding: 4px 0;
+    font-style: italic;
+  }
+  .toc li a {
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .toc li.toc-h3 {
+    font-size: 10.5px;
+    padding-left: 14px;
+    color: rgba(216, 207, 191, 0.42);
+  }
+  .toc li.is-active {
+    font-style: normal;
+  }
+  .toc li.is-active a { color: var(--title); }
+  .toc li:hover a { color: var(--title); }
+
+  .toc-chip-wrap {
+    margin: 0 0 18px 0;
+  }
+  @media (min-width: 1180px) {
+    .toc-chip-wrap { display: none; }
+  }
+  .toc-chip {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 14px;
+    background: rgba(216, 207, 191, 0.06);
+    border: 0;
+    border-left: 2px solid rgba(216, 207, 191, 0.32);
+    border-radius: 0 4px 4px 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 11.5px;
+    color: var(--meta);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-align: left;
+  }
+  .toc-chip-icon {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--dim);
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  .toc-chip-label { flex: 0 0 auto; }
+  .toc-chip-count {
+    color: var(--dim);
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-left: 8px;
+  }
+  .toc-chip-arrow {
+    margin-left: auto;
+    color: var(--dim);
+    transition: transform 0.2s ease;
+  }
+  .toc-chip[aria-expanded="true"] .toc-chip-arrow { transform: rotate(180deg); }
+
+  .toc-drawer {
+    background: rgba(216, 207, 191, 0.05);
+    border-left: 2px solid rgba(243, 234, 215, 0.32);
+    border-radius: 0 4px 4px 0;
+    margin-top: 4px;
+    padding: 4px 0 6px 0;
+  }
+  .toc-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(216, 207, 191, 0.04);
+    border-bottom: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--meta);
+    letter-spacing: 0.04em;
+  }
+  .toc-drawer-close {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(243, 234, 215, 0.14);
+    border: 1px solid rgba(243, 234, 215, 0.18);
+    color: rgba(243, 234, 215, 0.85);
+    font-size: 13px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .toc-drawer ul { list-style: none; padding: 0; margin: 0; }
+  .toc-drawer li {
+    padding: 9px 14px 9px 22px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--meta);
+    border-bottom: 1px solid rgba(216, 207, 191, 0.05);
+  }
+  .toc-drawer li:last-child { border-bottom: none; }
+  .toc-drawer li a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .toc-drawer li.is-active {
+    color: var(--title);
+    border-left: 2px solid var(--title);
+    padding-left: 20px;
+  }
+</style>
+
+<script>
+  function setupToc() {
+    const chip = document.querySelector('.toc-chip') as HTMLButtonElement | null;
+    const drawer = document.querySelector('.toc-drawer') as HTMLElement | null;
+    const drawerClose = document.querySelector('.toc-drawer-close') as HTMLButtonElement | null;
+
+    if (chip && drawer && drawerClose) {
+      const toggle = (open: boolean) => {
+        chip.setAttribute('aria-expanded', String(open));
+        drawer.hidden = !open;
+      };
+      chip.addEventListener('click', () => {
+        const open = chip.getAttribute('aria-expanded') !== 'true';
+        toggle(open);
+      });
+      drawerClose.addEventListener('click', () => toggle(false));
+      drawer.querySelectorAll('a').forEach((a) =>
+        a.addEventListener('click', () => toggle(false))
+      );
+    }
+
+    const tocItems = document.querySelectorAll('.toc li[data-target], .toc-drawer li[data-target]');
+    if (tocItems.length === 0) return;
+
+    const idToItems = new Map<string, Element[]>();
+    tocItems.forEach((li) => {
+      const id = li.getAttribute('data-target')!;
+      if (!idToItems.has(id)) idToItems.set(id, []);
+      idToItems.get(id)!.push(li);
+    });
+
+    const headings = Array.from(tocItems).map((li) =>
+      document.getElementById(li.getAttribute('data-target')!)
+    ).filter((h): h is HTMLElement => h !== null);
+
+    if (headings.length === 0) return;
+
+    const setActive = (id: string) => {
+      tocItems.forEach((li) => li.classList.remove('is-active'));
+      idToItems.get(id)?.forEach((li) => li.classList.add('is-active'));
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        setActive(visible[0].target.id);
+      },
+      {
+        rootMargin: '-20% 0% -70% 0%',
+        threshold: 0,
+      }
+    );
+
+    headings.forEach((h) => observer.observe(h));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupToc);
+  } else {
+    setupToc();
+  }
+</script>

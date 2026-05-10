@@ -1,0 +1,19 @@
+---
+// src/components/Pullquote.astro — large emphasis block
+---
+<blockquote class="pullquote">
+  <slot />
+</blockquote>
+
+<style>
+  .pullquote {
+    margin: 28px 0;
+    padding: 0 20px;
+    border-left: 2px solid var(--rule);
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--title);
+  }
+</style>

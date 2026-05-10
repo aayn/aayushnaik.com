@@ -1,0 +1,86 @@
+---
+// src/components/Backlinks.astro — "Linked from" section at the bottom of an essay.
+
+import type { Backlink } from '../lib/backlinks';
+
+interface Props {
+  backlinks: Backlink[];
+}
+const { backlinks } = Astro.props;
+
+function emphasizeLinkedPhrase(snippet: string, phrase: string): string {
+  if (!phrase) return snippet;
+  const safe = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return snippet.replace(
+    new RegExp(safe, 'g'),
+    `<em class="linked-phrase">${phrase}</em>`
+  );
+}
+---
+{backlinks.length > 0 && (
+  <section class="backlinks">
+    <div class="backlinks-label">Linked from</div>
+    {backlinks.map((b) => (
+      <article class="bl-row">
+        <a class="bl-title" href={`/essays/${b.fromSlug}`}>{b.fromTitle}</a>
+        {b.fromSubtitle && <div class="bl-sub">{b.fromSubtitle}</div>}
+        <blockquote class="bl-snippet" set:html={emphasizeLinkedPhrase(b.snippet, b.linkedPhrase)} />
+      </article>
+    ))}
+  </section>
+)}
+
+<style>
+  .backlinks {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+  .backlinks-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+  .bl-row {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(216, 207, 191, 0.06);
+  }
+  .bl-row:last-child { border-bottom: none; }
+  .bl-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--title);
+    line-height: 1.2;
+    margin-bottom: 2px;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    display: inline-block;
+  }
+  .bl-title:hover { border-bottom-color: var(--dim); }
+  .bl-sub {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .bl-snippet {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--meta);
+    padding: 0 0 0 12px;
+    margin: 0;
+    border-left: 1px solid var(--rule);
+    quotes: none;
+  }
+  .bl-snippet :global(.linked-phrase) {
+    color: var(--title);
+    font-style: normal;
+    font-weight: 400;
+  }
+</style>

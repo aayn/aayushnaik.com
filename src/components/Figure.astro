@@ -1,0 +1,38 @@
+---
+// src/components/Figure.astro — image + optional caption
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  fullBleed?: boolean;
+}
+const { src, alt, caption, fullBleed = false } = Astro.props;
+---
+<figure class={fullBleed ? 'full-bleed' : ''}>
+  <img src={src} alt={alt} loading="lazy" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  figure {
+    margin: 26px 0;
+  }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figure.full-bleed {
+    margin-left: -40px;
+    margin-right: -40px;
+  }
+  figcaption {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 11.5px;
+    color: var(--dim);
+    line-height: 1.5;
+    margin-top: 8px;
+    font-style: italic;
+  }
+</style>
