@@ -141,7 +141,12 @@
         openMarkerTop = markerEl.getBoundingClientRect().top;
 
         const sentence = markerEl.closest('[data-sentence]');
-        const insertAfter = sentence ?? markerEl.parentElement;
+        // Aside must NOT be a child of <p> (invalid HTML — browsers auto-close
+        // the <p>, breaking CSS like first-of-type::first-letter dropcaps).
+        // Insert after the paragraph instead. The sentence span is still
+        // useful for analytics / future scroll-anchoring.
+        const para = markerEl.closest('p');
+        const insertAfter = para ?? sentence ?? markerEl.parentElement;
         if (insertAfter && aside.previousElementSibling !== insertAfter) {
           insertAfter.parentNode?.insertBefore(aside, insertAfter.nextSibling);
         }
