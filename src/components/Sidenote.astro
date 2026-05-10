@@ -5,11 +5,7 @@
 //
 // Numbering is purely CSS (counter()) — no build-time assignment needed.
 ---
-<span class="sn-marker" tabindex="0" role="button" aria-label="Sidenote"></span>
-<aside class="sn-body" role="note">
-  <button class="sn-close" type="button" aria-label="Close note">×</button>
-  <span class="sn-content"><slot /></span>
-</aside>
+<span class="sn-marker" tabindex="0" role="button" aria-label="Sidenote"></span><span class="sn-body" role="note"><button class="sn-close" type="button" aria-label="Close note">×</button><span class="sn-content"><slot /></span></span>
 
 <style>
   /* Counter scope set in EssayLayout: .essay-body { counter-reset: sn; } */
@@ -48,6 +44,7 @@
 
   .sn-body {
     counter-increment: sn-body;
+    display: block;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 10.5px;
