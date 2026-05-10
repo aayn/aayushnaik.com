@@ -1,0 +1,36 @@
+---
+// src/components/HomepageContent.astro — static homepage content with CSS staggered fade-in
+---
+<div class="relative px-[60px] py-[60px] max-w-[640px] lg:max-w-[740px] 2xl:max-w-[900px]" style="z-index: 2;">
+  <div class="fade-in" style="animation-delay: 0.10s;">
+    <div class="font-['Space_Grotesk'] text-[13px] lg:text-[15px] 2xl:text-[18px] tracking-[3px] uppercase font-light mb-12 text-black/60 dark:text-white/80">
+      Aayush Naik
+    </div>
+  </div>
+  <div class="fade-in" style="animation-delay: 0.25s;">
+    <h1 class="text-[39px] lg:text-[44px] 2xl:text-[54px] font-light -tracking-[1px] leading-[1.2] mb-2 text-black dark:text-white">
+      Founder-philosopher-engineer king.
+    </h1>
+  </div>
+  <div class="fade-in" style="animation-delay: 0.40s;">
+    <div class="font-[Georgia,'Times_New_Roman',serif] italic text-2xl lg:text-[28px] 2xl:text-[34px] mb-8 leading-[1.4] text-black/55 dark:text-white/70">
+      Provisional title.
+    </div>
+  </div>
+  <div class="fade-in" style="animation-delay: 0.55s;">
+    <div class="w-10 lg:w-12 2xl:w-14 h-px bg-black/15 dark:bg-white/15 mb-7"></div>
+  </div>
+  <div class="fade-in" style="animation-delay: 0.65s;">
+    <p class="font-extralight text-[15px] lg:text-[17px] 2xl:text-[21px] leading-[1.9] text-black/60 dark:text-white/75">
+      I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-black dark:hover:text-white transition-colors">Hypercubic</a>, and I write <a href="https://www.anticynical.com/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-black dark:hover:text-white transition-colors">Anticynical</a>.
+    </p>
+  </div>
+</div>
+
+<style>
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: enter 0.9s ease forwards;
+  }
+</style>
