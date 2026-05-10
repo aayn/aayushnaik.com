@@ -17,35 +17,33 @@
     counter-increment: sn;
     cursor: pointer;
     display: inline-block;
-    font-size: 10px;
-    color: var(--title);
-    padding: 0 5px;
-    background: rgba(243, 234, 215, 0.14);
-    border-radius: 3px;
-    margin: 0 1px;
-    user-select: none;
-    transition: background 0.12s ease;
-    /* Sit in line, not super-aligned */
-    vertical-align: baseline;
-    line-height: 1.4;
-    position: relative;
-    top: -2px;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 400;
-    letter-spacing: 0.02em;
-  }
-  html:not(.dark) .sn-marker {
-    background: rgba(43, 38, 32, 0.10);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--title);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 2px 5px;
+    border-radius: 2px;
+    margin: 0 2px;
+    vertical-align: middle;
+    user-select: none;
+    transition: background 0.12s ease, border-color 0.12s ease;
   }
   .sn-marker::before {
     content: counter(sn);
     line-height: 1;
   }
-  .sn-marker:hover, .sn-marker:focus { background: rgba(243, 234, 215, 0.20); outline: none; }
-  :where(:not(.dark)) .sn-marker:hover { background: rgba(43, 38, 32, 0.16); }
+  .sn-marker:hover,
+  .sn-marker:focus {
+    border-color: var(--title);
+    outline: none;
+  }
   .sn-marker.is-open {
     background: var(--title);
     color: var(--bg);
+    border-color: var(--title);
   }
 
   .sn-body {
