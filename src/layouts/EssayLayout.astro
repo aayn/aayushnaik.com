@@ -1,0 +1,195 @@
+---
+// src/layouts/EssayLayout.astro — Tufte essay layout
+import BaseLayout from './BaseLayout.astro';
+import MetaBlock from '../components/MetaBlock.astro';
+import TOC from '../components/TOC.astro';
+import Backlinks from '../components/Backlinks.astro';
+import type { Backlink } from '../lib/backlinks';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface FrontMatter {
+  title: string;
+  subtitle?: string;
+  importance: number;
+  confidence: string;
+  status: string;
+  stance?: string;
+}
+interface Props {
+  frontmatter: FrontMatter;
+  headings: Heading[];
+  backlinks: Backlink[];
+  createdDate?: string | null;
+  modifiedDate?: string | null;
+}
+
+const { frontmatter, headings, backlinks, createdDate, modifiedDate } = Astro.props;
+
+function fmtDate(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  return iso.slice(0, 10);
+}
+const created = fmtDate(createdDate);
+const modified = fmtDate(modifiedDate);
+
+const h2Count = headings.filter((h) => h.depth === 2).length;
+const showToc = h2Count >= 2;
+---
+<BaseLayout title={`${frontmatter.title} — Aayush Naik`} description={frontmatter.subtitle ?? frontmatter.title}>
+  <div class="essay-page">
+    <a class="back-link" href="/essays">← essays</a>
+
+    <div class="essay-grid" data-show-toc={String(showToc)}>
+      <div class="toc-col">
+        <TOC headings={headings} />
+      </div>
+      <div class="body-col">
+        <article class="essay-body">
+          <h1 class="essay-title">{frontmatter.title}</h1>
+          {frontmatter.subtitle && <p class="essay-subtitle">{frontmatter.subtitle}</p>}
+          {(created || modified) && (
+            <div class="essay-dates">
+              {created && <span>created {created}</span>}
+              {created && modified && created !== modified && <span> · </span>}
+              {modified && created !== modified && <span>modified {modified}</span>}
+            </div>
+          )}
+          <MetaBlock
+            importance={frontmatter.importance}
+            confidence={frontmatter.confidence}
+            status={frontmatter.status}
+            stance={frontmatter.stance}
+          />
+          <slot />
+          <Backlinks backlinks={backlinks} />
+        </article>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .essay-page {
+    min-height: 100vh;
+    padding-top: 32px;
+    padding-bottom: 64px;
+  }
+  .back-link {
+    display: inline-block;
+    margin: 0 0 24px 60px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--title); }
+
+  .essay-grid {
+    display: grid;
+    grid-template-columns: 60px 0 60px 1fr 40px 200px 60px;
+    column-gap: 0;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .essay-grid[data-show-toc="true"] {
+    grid-template-columns: 60px 180px 40px 1fr 40px 200px 60px;
+  }
+  @media (max-width: 1179px) {
+    .essay-grid,
+    .essay-grid[data-show-toc="true"] {
+      grid-template-columns: 22px 1fr 22px;
+    }
+    .toc-col { grid-column: 2; }
+    .body-col { grid-column: 2; }
+  }
+  @media (min-width: 1180px) {
+    .toc-col { grid-column: 2; }
+    .body-col { grid-column: 4; }
+  }
+
+  .essay-body {
+    counter-reset: sn sn-body;
+    font-family: 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', Palatino, Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: var(--body);
+  }
+  @media (min-width: 1180px) {
+    .essay-body {
+      max-width: 560px;
+    }
+  }
+  @media (max-width: 1179px) {
+    .essay-body {
+      font-size: 16.5px;
+      line-height: 1.70;
+      max-width: none;
+    }
+  }
+  .essay-body :global(p) {
+    margin: 0 0 14px 0;
+  }
+  .essay-body :global(p:first-of-type)::first-letter {
+    float: left;
+    font-size: 44px;
+    line-height: 0.85;
+    padding-right: 6px;
+    padding-top: 4px;
+    color: var(--title);
+    font-weight: 500;
+  }
+  @media (max-width: 1179px) {
+    .essay-body :global(p:first-of-type)::first-letter {
+      font-size: 46px;
+    }
+  }
+  .essay-body :global(h2) {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--title);
+    margin: 24px 0 10px 0;
+    letter-spacing: -0.005em;
+  }
+  .essay-body :global(h3) {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--title);
+    margin: 18px 0 8px 0;
+  }
+
+  .essay-title {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--title);
+    margin: 0 0 4px 0;
+  }
+  @media (max-width: 1179px) {
+    .essay-title { font-size: 24px; }
+  }
+  .essay-subtitle {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 15px;
+    margin: 0 0 6px 0;
+  }
+  .essay-dates {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+</style>

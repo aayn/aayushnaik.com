@@ -1,0 +1,129 @@
+---
+// src/pages/essays/glossary.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import KesselmanLadder from '../../components/KesselmanLadder.astro';
+---
+<BaseLayout title="Glossary — Essays — Aayush Naik" description="Notation used in the metacommentary block of each essay.">
+  <div class="glossary-page">
+    <a class="back-link" href="/essays">← essays</a>
+    <header>
+      <h1>Glossary</h1>
+      <p class="lede">Each essay declares its position via four fields. Here's what they mean.</p>
+    </header>
+
+    <section id="importance">
+      <h2>Importance</h2>
+      <p>An integer from 0 to 10. Gwern's decile scale, anchored as follows:</p>
+      <ul>
+        <li><strong>0–1</strong> — a private note, narrow utility, low stakes.</li>
+        <li><strong>3–4</strong> — locally interesting; notes-to-self, small explorations.</li>
+        <li><strong>5–6</strong> — broadly interesting to my readers, but not life-defining.</li>
+        <li><strong>7–8</strong> — substantively important; positions I'd defend.</li>
+        <li><strong>9–10</strong> — central to my worldview, or world-historically important.</li>
+      </ul>
+    </section>
+
+    <section id="confidence">
+      <h2>Confidence</h2>
+      <p>How likely is the argument to be right? An eight-level verbal-probability ladder (the Kesselman list, with two non-probability tags appended).</p>
+      <KesselmanLadder />
+    </section>
+
+    <section id="status">
+      <h2>Status</h2>
+      <p>Where this essay is in its lifecycle.</p>
+      <dl>
+        <dt><code>notes</code></dt><dd>A pile of links, snippets, observations. No coherent argument yet.</dd>
+        <dt><code>draft</code></dt><dd>Structured prose with a coherent thesis. Rough.</dd>
+        <dt><code>in progress</code></dt><dd>Well-developed; not yet final.</dd>
+        <dt><code>finished</code></dt><dd>Complete pending new material I haven't yet encountered.</dd>
+      </dl>
+    </section>
+
+    <section id="stance">
+      <h2>Stance</h2>
+      <p>Where I personally land on the topic — distinct from confidence in the argument.</p>
+      <dl>
+        <dt><code>agree</code></dt><dd>I endorse the position the essay argues for.</dd>
+        <dt><code>disagree</code></dt><dd>I reject the position the essay argues against (or describes critically).</dd>
+        <dt><code>withholding</code></dt><dd>I'm not yet committed to the position.</dd>
+        <dt><code>—</code></dt><dd>Stance does not apply (typically for <code>confidence: log</code> or <code>confidence: emotional</code> entries). The frontmatter omits the field; the renderer shows the em-dash.</dd>
+      </dl>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .glossary-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px 22px 64px 22px;
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: var(--body);
+  }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--title); }
+  header h1 {
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--title);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 15px;
+    margin: 0 0 28px 0;
+  }
+  section {
+    padding-top: 18px;
+    margin-top: 18px;
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: 80px;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--title);
+    margin: 0 0 12px 0;
+    letter-spacing: -0.005em;
+  }
+  ul, dl { padding-left: 0; }
+  ul li {
+    margin: 4px 0;
+    list-style: none;
+  }
+  dl { margin: 8px 0; }
+  dt {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+    color: var(--title);
+    margin-top: 8px;
+  }
+  dd {
+    margin: 2px 0 0 0;
+    padding-left: 0;
+    color: var(--meta);
+  }
+  code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+    background: var(--status-dim-bg);
+    color: var(--title);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+</style>

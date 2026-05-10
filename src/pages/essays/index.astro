@@ -1,0 +1,151 @@
+---
+// src/pages/essays/index.astro — chronological list
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getModifiedDate } from '../../lib/git-dates';
+
+const all = await getCollection('essays');
+const enriched = all.map((entry) => {
+  const filePath = `src/content/essays/${entry.id}.mdx`;
+  return {
+    entry,
+    modified: getModifiedDate(filePath) ?? '0',
+  };
+});
+enriched.sort((a, b) => b.modified.localeCompare(a.modified));
+
+function statusClass(s: string): string {
+  switch (s) {
+    case 'finished': return 'status-finished';
+    case 'in progress': return 'status-progress';
+    default: return 'status-dim';
+  }
+}
+function stanceClass(s: string | undefined): string {
+  switch (s) {
+    case 'agree': return 'stance-agree';
+    case 'disagree': return 'stance-disagree';
+    case 'withholding': return 'stance-neutral';
+    default: return 'stance-neutral';
+  }
+}
+---
+<BaseLayout title="Essays — Aayush Naik" description="Beliefs and positions, weighed and dated.">
+  <div class="index-page">
+    <a class="back-link" href="/">← home</a>
+
+    <header class="index-head">
+      <h1>Essays</h1>
+      <p class="index-sub">Beliefs and positions, weighed and dated</p>
+    </header>
+
+    <ol class="index-list">
+      {enriched.map(({ entry }) => (
+        <li class="entry">
+          <a class="e-title" href={`/essays/${entry.id}`}>{entry.data.title}</a>
+          {entry.data.subtitle && <p class="e-sub">{entry.data.subtitle}</p>}
+          <div class="e-meta">
+            <span><span class="k">imp</span>{entry.data.importance} / 10</span>
+            <span><span class="k">conf</span>{entry.data.confidence}</span>
+            <span><span class="k">status</span><span class={`stat ${statusClass(entry.data.status)}`}>{entry.data.status}</span></span>
+            <span><span class="k">stance</span><span class={stanceClass(entry.data.stance)}>{entry.data.stance ?? '—'}</span></span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .index-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 22px 64px 22px;
+  }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--title); }
+
+  .index-head {
+    text-align: center;
+    margin: 18px 0 28px 0;
+  }
+  .index-head h1 {
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--title);
+    letter-spacing: -0.01em;
+    margin: 0 0 4px 0;
+  }
+  .index-head .index-sub {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .index-list { list-style: none; padding: 0; margin: 0; }
+  .entry {
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .entry:first-child { border-top: none; }
+  .e-title {
+    display: block;
+    font-family: 'Iowan Old Style', 'Source Serif 4', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.18;
+    color: var(--title);
+    text-decoration: none;
+    margin-bottom: 2px;
+  }
+  .e-title:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .e-sub {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 14px;
+    margin: 0 0 8px 0;
+  }
+  .e-meta {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    color: var(--meta);
+    letter-spacing: 0.04em;
+  }
+  .e-meta .k {
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 9.5px;
+    margin-right: 4px;
+  }
+  .e-meta span { white-space: nowrap; }
+  .stat {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 3px;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .status-finished { background: var(--status-finished-bg); color: var(--status-finished-fg); }
+  .status-progress { background: var(--status-progress-bg); color: var(--status-progress-fg); }
+  .status-dim      { background: var(--status-dim-bg);      color: var(--status-dim-fg);      }
+  .stance-agree    { color: var(--stance-agree); }
+  .stance-disagree { color: var(--stance-disagree); }
+  .stance-neutral  { color: var(--stance-neutral); }
+</style>

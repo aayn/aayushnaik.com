@@ -1,0 +1,41 @@
+---
+// src/pages/essays/[...slug].astro
+import { getCollection, render } from 'astro:content';
+import EssayLayout from '../../layouts/EssayLayout.astro';
+import { getBacklinks } from '../../lib/backlinks';
+import { getCreatedDate, getModifiedDate } from '../../lib/git-dates';
+import Sidenote from '../../components/Sidenote.astro';
+import Figure from '../../components/Figure.astro';
+import Pullquote from '../../components/Pullquote.astro';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('essays');
+  return Promise.all(
+    essays.map(async (entry) => {
+      const filePath = `src/content/essays/${entry.id}.mdx`;
+      const backlinks = await getBacklinks(entry.id);
+      return {
+        params: { slug: entry.id },
+        props: {
+          entry,
+          backlinks,
+          createdDate: getCreatedDate(filePath),
+          modifiedDate: getModifiedDate(filePath),
+        },
+      };
+    })
+  );
+}
+
+const { entry, backlinks, createdDate, modifiedDate } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<EssayLayout
+  frontmatter={entry.data}
+  headings={headings}
+  backlinks={backlinks}
+  createdDate={createdDate}
+  modifiedDate={modifiedDate}
+>
+  <Content components={{ Sidenote, Figure, Pullquote }} />
+</EssayLayout>
