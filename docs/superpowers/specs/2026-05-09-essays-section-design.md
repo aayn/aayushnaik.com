@@ -85,14 +85,20 @@ Approximate probability ranges shown for reference; rendered on the glossary pag
 | `in progress` | Well-developed; not yet final |
 | `finished` | Complete pending new material |
 
-### Stance values (3 + omission)
+### Stance values (5 + omission)
+
+A five-step gradient capturing both direction and conviction. Full endorsement and full rejection are themselves strong claims; the gradient encourages claiming them only when warranted.
 
 | Value | Meaning |
 |---|---|
-| `agree` | I endorse the position the essay argues for |
-| `disagree` | I reject the position the essay argues against (or describes critically) |
-| `withholding` | I'm not yet committed to the position |
+| `mostly agree` | I endorse the essay's position with minor reservations |
+| `partly agree` | I lean toward the position but hold significant reservations |
+| `withholding` | I'm not yet committed to either side |
+| `partly disagree` | I lean against the position but find parts of it real |
+| `mostly disagree` | I reject the position with minor concessions |
 | (field omitted) | Stance does not apply — typically for `confidence: log` or `confidence: emotional` entries. The render layer displays `—` in the meta block. The frontmatter must omit the field entirely; do not write a literal `—` (the schema rejects it) |
+
+Visual treatment in the meta block: `mostly agree` and `mostly disagree` use the full stance-agree / stance-disagree color; `partly agree` and `partly disagree` use the same hue at 0.7 opacity; `withholding` uses the neutral color.
 
 ### Dates
 
@@ -125,7 +131,10 @@ const essays = defineCollection({
       'log', 'emotional',
     ]),
     status: z.enum(['notes', 'draft', 'in progress', 'finished']),
-    stance: z.enum(['agree', 'disagree', 'withholding']).optional(),
+    stance: z.enum([
+      'mostly agree', 'partly agree', 'withholding',
+      'partly disagree', 'mostly disagree',
+    ]).optional(),
   }),
 });
 

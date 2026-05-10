@@ -43,10 +43,13 @@ import KesselmanLadder from '../../components/KesselmanLadder.astro';
     <section id="stance">
       <h2>Stance</h2>
       <p>Where I personally land on the topic — distinct from confidence in the argument.</p>
+      <p>A five-step gradient — direction <em>and</em> conviction. Full endorsement and full rejection are themselves strong claims; the gradient encourages saying so only when warranted.</p>
       <dl>
-        <dt><code>agree</code></dt><dd>I endorse the position the essay argues for.</dd>
-        <dt><code>disagree</code></dt><dd>I reject the position the essay argues against (or describes critically).</dd>
-        <dt><code>withholding</code></dt><dd>I'm not yet committed to the position.</dd>
+        <dt><code>mostly agree</code></dt><dd>I endorse the essay's position with minor reservations.</dd>
+        <dt><code>partly agree</code></dt><dd>I lean toward the position but hold significant reservations.</dd>
+        <dt><code>withholding</code></dt><dd>I'm not yet committed to either side.</dd>
+        <dt><code>partly disagree</code></dt><dd>I lean against the position but find parts of it real.</dd>
+        <dt><code>mostly disagree</code></dt><dd>I reject the position with minor concessions.</dd>
         <dt><code>—</code></dt><dd>Stance does not apply (typically for <code>confidence: log</code> or <code>confidence: emotional</code> entries). The frontmatter omits the field; the renderer shows the em-dash.</dd>
       </dl>
     </section>

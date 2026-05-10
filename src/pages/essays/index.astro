@@ -23,9 +23,11 @@ function statusClass(s: string): string {
 }
 function stanceClass(s: string | undefined): string {
   switch (s) {
-    case 'agree': return 'stance-agree';
-    case 'disagree': return 'stance-disagree';
+    case 'mostly agree': return 'stance-agree';
+    case 'partly agree': return 'stance-agree-soft';
     case 'withholding': return 'stance-neutral';
+    case 'partly disagree': return 'stance-disagree-soft';
+    case 'mostly disagree': return 'stance-disagree';
     default: return 'stance-neutral';
   }
 }
@@ -145,7 +147,9 @@ function stanceClass(s: string | undefined): string {
   .status-finished { background: var(--status-finished-bg); color: var(--status-finished-fg); }
   .status-progress { background: var(--status-progress-bg); color: var(--status-progress-fg); }
   .status-dim      { background: var(--status-dim-bg);      color: var(--status-dim-fg);      }
-  .stance-agree    { color: var(--stance-agree); }
-  .stance-disagree { color: var(--stance-disagree); }
-  .stance-neutral  { color: var(--stance-neutral); }
+  .stance-agree         { color: var(--stance-agree); }
+  .stance-agree-soft    { color: var(--stance-agree); opacity: 0.7; }
+  .stance-disagree      { color: var(--stance-disagree); }
+  .stance-disagree-soft { color: var(--stance-disagree); opacity: 0.7; }
+  .stance-neutral       { color: var(--stance-neutral); }
 </style>

@@ -22,7 +22,13 @@ const essays = defineCollection({
       'emotional',
     ]),
     status: z.enum(['notes', 'draft', 'in progress', 'finished']),
-    stance: z.enum(['agree', 'disagree', 'withholding']).optional(),
+    stance: z.enum([
+      'mostly agree',
+      'partly agree',
+      'withholding',
+      'partly disagree',
+      'mostly disagree',
+    ]).optional(),
   }),
 });
 
