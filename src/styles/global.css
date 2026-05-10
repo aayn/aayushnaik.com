@@ -13,40 +13,72 @@
 @import "@fontsource/space-grotesk/400.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 
-/* === Palette tokens — light (default) === */
+/* === Site-wide palette tokens (homepage uses these) ===
+   Pure black/white for the homepage to preserve the original aesthetic.
+   Essay pages override --bg etc. inside .essay-page / .index-page / .glossary-page below. */
 
 :root {
+  --bg: #ffffff;
+  --body: rgba(0, 0, 0, 0.88);
+  --title: #000000;
+  --dim: rgba(0, 0, 0, 0.55);
+  --rule: rgba(0, 0, 0, 0.14);
+  --meta: rgba(0, 0, 0, 0.75);
+  --stance-agree: #5b8b3f;
+  --stance-disagree: #a04848;
+  --stance-neutral: rgba(0, 0, 0, 0.6);
+  --status-finished-bg: rgba(91, 139, 63, 0.12);
+  --status-finished-fg: #5b8b3f;
+  --status-progress-bg: rgba(0, 0, 0, 0.10);
+  --status-progress-fg: #000000;
+  --status-dim-bg: rgba(0, 0, 0, 0.06);
+  --status-dim-fg: rgba(0, 0, 0, 0.45);
+}
+
+:where(.dark) {
+  --bg: #000000;
+  --body: rgba(255, 255, 255, 0.88);
+  --title: #ffffff;
+  --dim: rgba(255, 255, 255, 0.5);
+  --rule: rgba(255, 255, 255, 0.16);
+  --meta: rgba(255, 255, 255, 0.78);
+  --stance-agree: #cfe9b8;
+  --stance-disagree: #ecb8b8;
+  --stance-neutral: rgba(255, 255, 255, 0.7);
+  --status-finished-bg: rgba(180, 222, 160, 0.16);
+  --status-finished-fg: #cfe9b8;
+  --status-progress-bg: rgba(255, 255, 255, 0.16);
+  --status-progress-fg: #ffffff;
+  --status-dim-bg: rgba(255, 255, 255, 0.08);
+  --status-dim-fg: rgba(255, 255, 255, 0.55);
+}
+
+/* === Warm palette override scoped to essay-related pages === */
+
+:where(.essay-page, .index-page, .glossary-page) {
   --bg: #fbf8f1;
   --body: rgba(43, 38, 32, 0.88);
   --title: #1a1612;
   --dim: rgba(43, 38, 32, 0.55);
   --rule: rgba(43, 38, 32, 0.14);
   --meta: rgba(43, 38, 32, 0.75);
-  --stance-agree: #5b8b3f;
-  --stance-disagree: #a04848;
   --stance-neutral: rgba(43, 38, 32, 0.6);
-  --status-finished-bg: rgba(91, 139, 63, 0.12);
-  --status-finished-fg: #5b8b3f;
   --status-progress-bg: rgba(43, 38, 32, 0.10);
   --status-progress-fg: #1a1612;
   --status-dim-bg: rgba(43, 38, 32, 0.06);
   --status-dim-fg: rgba(43, 38, 32, 0.45);
+  background: var(--bg);
+  color: var(--body);
 }
 
-/* === Palette tokens — dark === */
-
-:where(.dark) {
+:where(.dark) :where(.essay-page, .index-page, .glossary-page) {
   --bg: #0c0a08;
   --body: rgba(216, 207, 191, 0.88);
   --title: #f3ead7;
   --dim: rgba(216, 207, 191, 0.5);
   --rule: rgba(216, 207, 191, 0.16);
   --meta: rgba(216, 207, 191, 0.78);
-  --stance-agree: #cfe9b8;
-  --stance-disagree: #ecb8b8;
   --stance-neutral: rgba(216, 207, 191, 0.7);
-  --status-finished-bg: rgba(180, 222, 160, 0.16);
-  --status-finished-fg: #cfe9b8;
   --status-progress-bg: rgba(243, 234, 215, 0.16);
   --status-progress-fg: #f3ead7;
   --status-dim-bg: rgba(243, 234, 215, 0.08);
@@ -66,6 +98,11 @@ html, body {
 }
 
 body {
+  min-height: 100vh;
+}
+
+/* Essay/index/glossary pages take full viewport height with their warm bg */
+.essay-page, .index-page, .glossary-page {
   min-height: 100vh;
 }
 
