@@ -35,7 +35,7 @@
   --status-dim-fg: rgba(0, 0, 0, 0.45);
 }
 
-:where(.dark) {
+html.dark {
   --bg: #000000;
   --body: rgba(255, 255, 255, 0.88);
   --title: #ffffff;
@@ -71,7 +71,7 @@
   color: var(--body);
 }
 
-:where(.dark) :where(.essay-page, .index-page, .glossary-page) {
+html.dark :where(.essay-page, .index-page, .glossary-page) {
   --bg: #0c0a08;
   --body: rgba(216, 207, 191, 0.88);
   --title: #f3ead7;
