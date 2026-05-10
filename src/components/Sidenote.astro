@@ -1,0 +1,195 @@
+---
+// src/components/Sidenote.astro
+// Renders an in-body superscript marker AND a sibling aside.
+// CSS handles desktop float-into-rail and mobile inline-expand visibility.
+//
+// Numbering is purely CSS (counter()) — no build-time assignment needed.
+---
+<sup class="sn-marker" tabindex="0" aria-label="Sidenote"></sup>
+<aside class="sn-body" role="note">
+  <button class="sn-close" type="button" aria-label="Close note">×</button>
+  <span class="sn-content"><slot /></span>
+</aside>
+
+<style>
+  /* Counter scope set in EssayLayout: .essay-body { counter-reset: sn; } */
+  .sn-marker {
+    counter-increment: sn;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--title);
+    padding: 1px 5px;
+    background: rgba(243, 234, 215, 0.12);
+    border-radius: 3px;
+    margin: 0 1px;
+    user-select: none;
+    transition: background 0.12s ease;
+  }
+  :where(:not(.dark)) .sn-marker {
+    background: rgba(43, 38, 32, 0.10);
+  }
+  .sn-marker::before {
+    content: counter(sn);
+    font-size: 9.5px;
+    vertical-align: super;
+    line-height: 1;
+  }
+  .sn-marker:hover, .sn-marker:focus { background: rgba(243, 234, 215, 0.20); outline: none; }
+  :where(:not(.dark)) .sn-marker:hover { background: rgba(43, 38, 32, 0.16); }
+  .sn-marker.is-open {
+    background: var(--title);
+    color: var(--bg);
+  }
+
+  .sn-body {
+    counter-increment: sn-body;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: var(--dim);
+    border-left: 1px solid var(--rule);
+    padding-left: 12px;
+    margin: 6px 0;
+  }
+  .sn-body::before {
+    content: counter(sn-body) " ";
+    color: var(--dim);
+    margin-right: 4px;
+  }
+
+  /* Desktop: float aside into the right rail via negative margin (Tufte-CSS pattern). */
+  @media (min-width: 1180px) {
+    .sn-body {
+      float: right;
+      clear: right;
+      width: 200px;
+      margin-right: -240px;
+      margin-top: 0.4em;
+      position: relative;
+    }
+    .sn-close {
+      display: none;
+    }
+  }
+
+  /* Mobile / tablet: hide the rail aside; markers reveal it inline */
+  @media (max-width: 1179px) {
+    .sn-body {
+      display: none;
+    }
+    .sn-close {
+      display: none;
+    }
+    .sn-body.is-mobile-open {
+      display: block;
+      margin: 8px 0 14px 0;
+      padding: 10px 38px 12px 14px;
+      background: rgba(216, 207, 191, 0.06);
+      border-left: 2px solid rgba(216, 207, 191, 0.32);
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--meta);
+      border-radius: 0 4px 4px 0;
+      position: relative;
+    }
+    :where(:not(.dark)) .sn-body.is-mobile-open {
+      background: rgba(43, 38, 32, 0.05);
+      border-left-color: rgba(43, 38, 32, 0.30);
+    }
+    .sn-body.is-mobile-open .sn-close {
+      display: flex;
+      position: sticky;
+      top: 12px;
+      float: right;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: rgba(243, 234, 215, 0.16);
+      color: rgba(243, 234, 215, 0.95);
+      border: 1px solid rgba(243, 234, 215, 0.18);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      margin-top: -8px;
+      margin-right: -28px;
+    }
+  }
+</style>
+
+<script>
+  // Sidenote mobile expand/close mechanic.
+  // Pairs each marker with the aside that immediately follows it in source order.
+
+  function setupSidenotes() {
+    const markers = document.querySelectorAll('.sn-marker');
+    markers.forEach((markerEl) => {
+      let aside = markerEl.nextElementSibling;
+      while (aside && !aside.classList?.contains('sn-body')) {
+        aside = aside.nextElementSibling;
+      }
+      if (!aside) return;
+
+      const closeBtn = aside.querySelector('.sn-close');
+      let openMarkerTop = 0;
+
+      const open = () => {
+        if (window.matchMedia('(min-width: 1180px)').matches) return;
+        openMarkerTop = markerEl.getBoundingClientRect().top;
+
+        const sentence = markerEl.closest('[data-sentence]');
+        const insertAfter = sentence ?? markerEl.parentElement;
+        if (insertAfter && aside.previousElementSibling !== insertAfter) {
+          insertAfter.parentNode?.insertBefore(aside, insertAfter.nextSibling);
+        }
+
+        aside.classList.add('is-mobile-open');
+        markerEl.classList.add('is-open');
+
+        requestAnimationFrame(() => {
+          const rect = aside.getBoundingClientRect();
+          const target = rect.top + window.scrollY - window.innerHeight * 0.3;
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        });
+      };
+
+      const close = () => {
+        if (!aside.classList.contains('is-mobile-open')) return;
+        aside.classList.remove('is-mobile-open');
+        markerEl.classList.remove('is-open');
+
+        requestAnimationFrame(() => {
+          const newTop = markerEl.getBoundingClientRect().top;
+          window.scrollBy({ top: newTop - openMarkerTop, behavior: 'instant' });
+        });
+      };
+
+      markerEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (markerEl.classList.contains('is-open')) close();
+        else open();
+      });
+      markerEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (markerEl.classList.contains('is-open')) close();
+          else open();
+        }
+      });
+
+      closeBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        close();
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSidenotes);
+  } else {
+    setupSidenotes();
+  }
+</script>

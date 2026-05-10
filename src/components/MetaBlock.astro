@@ -1,0 +1,99 @@
+---
+// src/components/MetaBlock.astro — reads frontmatter, renders mono grid
+
+interface Props {
+  importance: number;
+  confidence: string;
+  status: string;
+  stance?: string;
+}
+
+const { importance, confidence, status, stance } = Astro.props;
+
+const stanceDisplay = stance ?? '—';
+const statusClass = (() => {
+  switch (status) {
+    case 'finished': return 'status-finished';
+    case 'in progress': return 'status-progress';
+    case 'draft':
+    case 'notes':
+    default: return 'status-dim';
+  }
+})();
+const stanceClass = (() => {
+  switch (stance) {
+    case 'agree': return 'stance-agree';
+    case 'disagree': return 'stance-disagree';
+    case 'withholding': return 'stance-neutral';
+    default: return 'stance-neutral';
+  }
+})();
+---
+<div class="meta-block">
+  <div class="row">
+    <a href="/essays/glossary#importance" class="k">Importance</a>
+    <span class="v">{importance} / 10</span>
+  </div>
+  <div class="row">
+    <a href="/essays/glossary#confidence" class="k">Confidence</a>
+    <span class="v">{confidence}</span>
+  </div>
+  <div class="row">
+    <a href="/essays/glossary#status" class="k">Status</a>
+    <span class={`v stat ${statusClass}`}>{status}</span>
+  </div>
+  <div class="row">
+    <a href="/essays/glossary#stance" class="k">Stance</a>
+    <span class={`v ${stanceClass}`}>{stanceDisplay}</span>
+  </div>
+</div>
+
+<style>
+  .meta-block {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px;
+    line-height: 1.95;
+    letter-spacing: 0.04em;
+    color: var(--meta);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 0;
+    margin-bottom: 22px;
+  }
+  .row {
+    display: block;
+  }
+  .k {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 9.5px;
+    display: inline-block;
+    width: 92px;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .k:hover { color: var(--title); }
+  .v {
+    color: var(--title);
+  }
+  .stat {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 3px;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .status-finished { background: var(--status-finished-bg); color: var(--status-finished-fg); }
+  .status-progress { background: var(--status-progress-bg); color: var(--status-progress-fg); }
+  .status-dim      { background: var(--status-dim-bg);      color: var(--status-dim-fg);      }
+  .stance-agree    { color: var(--stance-agree); }
+  .stance-disagree { color: var(--stance-disagree); }
+  .stance-neutral  { color: var(--stance-neutral); }
+
+  @media (max-width: 980px) {
+    .meta-block { font-size: 10px; }
+    .k { font-size: 9px; width: 80px; }
+  }
+</style>
