@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One line · subtle watermarks</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f6f5f2;--fg:#111;--dim:rgba(0,0,0,.55);--lav:#4a3fa8;--ul:rgba(74,63,168,.35);--w:400;
+        --ink:0,0,0}
+  html.dark{--bg:#000;--fg:rgba(255,255,255,.88);--dim:rgba(255,255,255,.5);--lav:#a99bff;--ul:#a99bff;--w:300;
+        --ink:255,255,255}
+  *{box-sizing:border-box}
+  html{scroll-snap-type:y mandatory}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  section{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;scroll-snap-align:start}
+  .label{position:absolute;top:28px;left:48px;font-size:13px;color:var(--dim);max-width:460px;line-height:1.5;z-index:3}
+  .label b{color:var(--fg);font-weight:500;margin-right:.6em}
+  main{position:relative;z-index:2;padding:60px}
+  p{margin:0;font-size:17px;line-height:1.75;font-weight:var(--w)}
+  .sig{margin-top:1.75em}
+  a{color:var(--lav);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--ul);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:transparent}
+  .ico{width:.72em;height:.72em;margin-left:.18em;vertical-align:-.02em;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* watermark base */
+  .wm{position:absolute;margin:0;z-index:1;user-select:none;pointer-events:none;font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;line-height:.82;letter-spacing:-.05em}
+  .outline{color:transparent;-webkit-text-stroke:1px rgba(var(--ink),var(--a))}
+  .solid{color:rgba(var(--ink),var(--a))}
+
+  /* 1 — EVEN IF, outlined, bottom-left bleed, fainter than round 1 */
+  .w1 .wm{--a:.08;left:-1vw;bottom:-1.5vw;font-size:24vw}
+  /* 2 — EVEN IF, solid at 3%, enormous, centered behind the text */
+  .w2 .wm{--a:.035;left:50%;top:50%;transform:translate(-50%,-50%);font-size:30vw;white-space:nowrap}
+  /* 3 — AN monogram, outlined, centered behind */
+  .w3 .wm{--a:.07;left:50%;top:50%;transform:translate(-50%,-50%);font-size:44vw;letter-spacing:-.08em}
+  /* 4 — AN, small solid stamp, bottom-right */
+  .w4 .wm{--a:.12;right:48px;bottom:40px;font-size:40px;letter-spacing:-.06em}
+  /* 5 — full name running up the right edge */
+  .w5 .strip{position:absolute;top:0;bottom:0;right:0;width:12vw;display:flex;align-items:center;justify-content:center;z-index:1;pointer-events:none}
+  .w5 .wm{--a:.06;position:static;font-size:9vw;line-height:1;white-space:nowrap;letter-spacing:-.03em;transform:rotate(-90deg)}
+  /* 6 — tesseract line drawing, faint, centered behind */
+  .w6 svg.tess{position:absolute;left:50%;top:50%;width:min(70vh,70vw);height:min(70vh,70vw);transform:translate(-50%,-50%);z-index:1;pointer-events:none;fill:none;stroke:rgba(var(--ink),.07);stroke-width:1}
+  /* 7 — EVEN IF, outlined, top-left, small, half off-canvas */
+  .w7 .wm{--a:.07;left:-.5vw;top:-2vw;font-size:12vw}
+  /* 8 — "EVEN IF." solid, bottom-right, right-aligned, bleeding off the right edge */
+  .w8 .wm{--a:.045;right:-1vw;bottom:-1vw;font-size:14vw;text-align:right;white-space:nowrap}
+  /* 9 — the name tiled across the page as a faint texture */
+  .w9 .tile{position:absolute;inset:-40px;z-index:1;pointer-events:none;user-select:none;display:flex;flex-wrap:wrap;gap:0 48px;align-content:flex-start;
+    font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;font-size:26px;line-height:2.4;letter-spacing:-.02em;color:rgba(var(--ink),.03);white-space:nowrap;overflow:hidden;transform:rotate(-8deg) scale(1.2)}
+
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px;z-index:5}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:40px 28px}.label{left:24px;max-width:70%}.theme{right:24px}.w1 .wm{font-size:40vw}.w3 .wm{font-size:70vw}.w4 .wm{right:24px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="ext" viewBox="0 0 16 16"><path d="M7 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5V9"/><path d="M9 2h5v5M14 2 7.5 8.5"/></symbol></svg>
+
+<section class="w1">
+  <div class="label"><b>1</b>"EVEN IF" outlined, bottom-left bleed — the round-1 watermark at about half the strength</div>
+  <p class="wm outline" aria-hidden="true">EVEN<br>IF</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w2">
+  <div class="label"><b>2</b>"EVEN IF" solid at 3%, enormous, centered directly behind the text</div>
+  <p class="wm solid" aria-hidden="true">EVEN IF</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w3">
+  <div class="label"><b>3</b>"AN" monogram, outlined, centered behind the text</div>
+  <p class="wm outline" aria-hidden="true">AN</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w4">
+  <div class="label"><b>4</b>"AN" as a small solid stamp in the bottom-right corner — the opposite of enormous</div>
+  <p class="wm solid" aria-hidden="true">AN</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w5">
+  <div class="label"><b>5</b>The full name running up the right edge, outlined</div>
+  <div class="strip" aria-hidden="true"><p class="wm outline">AAYUSH NAIK</p></div>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w6">
+  <div class="label"><b>6</b>A tesseract — a hypercube — drawn in hairline behind the text. No words.</div>
+  <svg class="tess" viewBox="0 0 400 400" aria-hidden="true">
+    <rect x="60" y="60" width="280" height="280"/>
+    <rect x="140" y="140" width="120" height="120"/>
+    <line x1="60" y1="60" x2="140" y2="140"/><line x1="340" y1="60" x2="260" y2="140"/>
+    <line x1="60" y1="340" x2="140" y2="260"/><line x1="340" y1="340" x2="260" y2="260"/>
+  </svg>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w7">
+  <div class="label" style="top:auto;bottom:28px"><b>7</b>"EVEN IF" outlined, small, tucked half off the top-left corner</div>
+  <p class="wm outline" aria-hidden="true">EVEN<br>IF</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w8">
+  <div class="label"><b>8</b>"EVEN IF." solid and faint, bottom-right, running off the right edge</div>
+  <p class="wm solid" aria-hidden="true">EVEN IF.</p>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<section class="w9">
+  <div class="label"><b>9</b>The name tiled across the whole page as a faint texture, slightly rotated</div>
+  <div class="tile" aria-hidden="true">
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+    <span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span><span>AAYUSH NAIK</span>
+  </div>
+  <main><p>I'm building <a href="https://hypercubic.ai">Hypercubic<svg class="ico"><use href="#ext"/></svg></a> and I <a href="https://www.anticynical.com/">write<svg class="ico"><use href="#ext"/></svg></a> sometimes.</p><p class="sig">-- Aayush Naik</p></main>
+</section>
+
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

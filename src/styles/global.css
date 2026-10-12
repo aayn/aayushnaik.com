@@ -53,6 +53,17 @@ html.dark {
   --status-dim-fg: rgba(255, 255, 255, 0.55);
 }
 
+/* === Homepage: paper ground in light mode; pure black in dark === */
+
+.home-page {
+  --bg: #f6f5f2;
+  background: var(--bg);
+}
+
+html.dark .home-page {
+  --bg: #000000;
+}
+
 /* === Warm palette override scoped to essay-related pages === */
 
 :where(.essay-page, .index-page, .glossary-page) {

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One line · 07 Split</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.5);--rule:rgba(0,0,0,.16)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.5);--rule:rgba(255,255,255,.18)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  main{width:100%;max-width:1200px;margin:0 auto;padding:60px 72px;display:grid;grid-template-columns:1fr 2fr;column-gap:64px;align-items:baseline}
+  .name{margin:0;font-size:15px;font-weight:400;color:var(--dim)}
+  .line{margin:0;font-size:clamp(26px,3vw,40px);font-weight:300;line-height:1.3;letter-spacing:-.01em}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:.15em;text-decoration-thickness:1px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:760px){main{grid-template-columns:1fr;row-gap:16px;padding:48px 28px}.theme{right:24px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="name">Aayush Naik</p>
+  <p class="line">I'm building <a href="https://hypercubic.ai">Hypercubic</a><br>and I <a href="https://www.anticynical.com/">write</a> sometimes.</p>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

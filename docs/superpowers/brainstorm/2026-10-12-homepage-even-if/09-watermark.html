@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>09 · Watermark</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.55);--rule:rgba(0,0,0,.14);--stroke:rgba(0,0,0,.14)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.55);--rule:rgba(255,255,255,.16);--stroke:rgba(255,255,255,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--fg);overflow:hidden;
+    font-family:"Space Grotesk",system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  .mark{position:fixed;left:-1vw;bottom:-1.5vw;margin:0;font-size:26vw;font-weight:700;line-height:.82;letter-spacing:-.05em;
+    color:transparent;-webkit-text-stroke:1px var(--stroke);user-select:none;pointer-events:none;z-index:0}
+  main{position:relative;z-index:1;max-width:740px;padding:60px}
+  p{margin:0;font-size:19px;line-height:1.7}
+  .premises{margin-bottom:1.7em}
+  hr{display:none}
+  .bio{color:var(--dim);margin-top:4.5em}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .sig{margin-top:1.7em;color:var(--dim)}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px;z-index:2}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:40px 28px}.mark{font-size:44vw;bottom:-8vw}.theme{right:24px}}
+</style>
+</head>
+<body>
+<p class="mark" aria-hidden="true">EVEN<br>IF</p>
+<main>
+  <p class="premises">EVEN IF.<br>The world is far from perfect.<br>The universe is silent.<br>Almost no one cares about you.<br>You will soon die.</p>
+  <p>EVEN IF all that is true, I choose to live a beautiful existence.</p>
+  <hr>
+  <p class="bio">I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</p>
+  <p class="sig">— Aayush Naik</p>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

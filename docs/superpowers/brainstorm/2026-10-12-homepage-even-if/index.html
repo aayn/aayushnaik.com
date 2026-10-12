@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homepage variations · "Even if"</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<style>
+  :root{--bg:#fff;--fg:rgba(0,0,0,.88);--dim:rgba(0,0,0,.55);--rule:rgba(0,0,0,.12)}
+  html.dark{--bg:#000;--fg:rgba(255,255,255,.88);--dim:rgba(255,255,255,.5);--rule:rgba(255,255,255,.14)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:640px;margin:0 auto;padding:72px 28px}
+  h1{font-size:17px;font-weight:400;margin:0 0 6px}
+  .note{color:var(--dim);font-size:15px;line-height:1.6;margin:0 0 40px}
+  ol{list-style:none;margin:0;padding:0}
+  li{border-top:1px solid var(--rule);padding:16px 0;display:grid;grid-template-columns:2.4em 1fr;gap:16px;font-size:15px;line-height:1.5}
+  li:last-child{border-bottom:1px solid var(--rule)}
+  .n{color:var(--dim);font-variant-numeric:tabular-nums}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule)}
+  a:hover{text-decoration-color:var(--fg)}
+  .d{color:var(--dim);display:block;margin-top:2px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Homepage variations — "Even if"</h1>
+  <p class="note">Each page is self-contained and follows your system light/dark setting. The ◐ in the top-right toggles it. The choice persists across pages so you can compare in the same mode.</p>
+  <p class="note"><strong>Winner:</strong> Round 2 · 01 Baseline (the line and the name, light-mode fix 5) — implemented in <code>src/components/HomepageContent.astro</code>. Runners-up: Round 1 · 01 ("Even if") and Round 1 · 09 (Watermark, wildcard). Round 3 watermarks were all rejected.</p>
+  <h1>Round 2 — the line and the name, nothing else</h1>
+  <p class="note">Ten homepages that are only "I'm building Hypercubic and I write sometimes." and the signature. <strong>01 chosen</strong>, with light-mode fix 5 (off-white paper, weight 400, duller violet) folded in. <a href="one-line/light-fixes.html">The fixes page</a> is kept for the record. Round 3: <a href="one-line/watermarks.html">nine subtle watermarks</a> behind it.</p>
+  <ol style="margin-bottom:56px">
+    <li><span class="n">01</span><span><a href="one-line/01-baseline.html">Baseline</a><span class="d">The mockup as-is: system sans, lavender links with box-arrow icon, double hyphen.</span></span></li>
+    <li><span class="n">02</span><span><a href="one-line/02-headline.html">Headline</a><span class="d">The sentence as a large light headline (Space Grotesk); name small beneath.</span></span></li>
+    <li><span class="n">03</span><span><a href="one-line/03-serif-centered.html">Serif, centered</a><span class="d">Source Serif, warm essay palette, centered; name in italic.</span></span></li>
+    <li><span class="n">04</span><span><a href="one-line/04-corners.html">Corners</a><span class="d">Name top-left, sentence bottom-left; the viewport is the composition.</span></span></li>
+    <li><span class="n">05</span><span><a href="one-line/05-mono.html">Mono</a><span class="d">IBM Plex Mono, small, plain.</span></span></li>
+    <li><span class="n">06</span><span><a href="one-line/06-name-first.html">Name first</a><span class="d">Your name is the headline; the sentence sits beneath, dimmed.</span></span></li>
+    <li><span class="n">07</span><span><a href="one-line/07-split.html">Split</a><span class="d">Name in a narrow left column, sentence large on the right. No rule.</span></span></li>
+    <li><span class="n">08</span><span><a href="one-line/08-two-lines.html">Two lines, serif</a><span class="d">Newsreader, broken after "Hypercubic" like a couplet; name italic.</span></span></li>
+    <li><span class="n">09</span><span><a href="one-line/09-weight.html">Weight</a><span class="d">Archivo 200 for the sentence, 800 for the two links; no underlines.</span></span></li>
+    <li><span class="n">10</span><span><a href="one-line/10-lavender.html">Lavender</a><span class="d">Mid-size system sans; the mockup's lavender for links and the signature.</span></span></li>
+  </ol>
+  <h1>Round 1 — "Even if"</h1>
+  <ol>
+    <li><span class="n">01</span><span><a href="01-baseline.html">Baseline</a><span class="d">The mockup as-is, tidied. System sans, pure black/white, staggered fade-in as today.</span></span></li>
+    <li><span class="n">02</span><span><a href="02-hanging.html">Hanging "Even if"</a><span class="d">Serif, warm essay palette. "Even if" hangs in the margin; the four lines run off it in lowercase.</span></span></li>
+    <li><span class="n">03</span><span><a href="03-scale.html">Scale contrast</a><span class="d">Premises small and dim; "I choose to live a beautiful existence." is the headline.</span></span></li>
+    <li><span class="n">04</span><span><a href="04-split.html">Split</a><span class="d">Premises left, resolution right, vertical rule between. Stacks on mobile.</span></span></li>
+    <li><span class="n">05</span><span><a href="05-mono.html">Mono</a><span class="d">IBM Plex Mono. Lines appear one at a time; nothing else moves.</span></span></li>
+    <li><span class="n">06</span><span><a href="06-frontispiece.html">Frontispiece</a><span class="d">Centered, Cormorant Garamond. Premises italic, resolution roman. Book-epigraph feel.</span></span></li>
+    <li><span class="n">07</span><span><a href="07-weight.html">Weight contrast</a><span class="d">Archivo. Premises in 800, resolution in 200, same size.</span></span></li>
+    <li><span class="n">08</span><span><a href="08-cobalt.html">Cobalt</a><span class="d">One colour, used only for the resolution line and the links. Otherwise baseline.</span></span></li>
+    <li><span class="n">09</span><span><a href="09-watermark.html">Watermark</a> — wildcard finalist<span class="d">"EVEN IF" enormous and outlined behind the text. Rule removed per round 2.</span></span></li>
+    <li><span class="n">10</span><span><a href="10-titlecard.html">Title card</a><span class="d">Newsreader. Name top-left, copy bottom-left, bio bottom-right. Each premise gets its own "Even if".</span></span></li>
+    <li><span class="n">11</span><span><a href="11-condensed.html">Condensed poster</a><span class="d">Barlow Condensed, uppercase, tight leading. Loud.</span></span></li>
+  </ol>
+</main>
+</body>
+</html>

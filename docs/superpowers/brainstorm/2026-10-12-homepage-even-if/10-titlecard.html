@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 · Title card</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.5);--rule:rgba(0,0,0,.14)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.62);--rule:rgba(255,255,255,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;background:var(--bg);color:var(--fg);
+    font-family:"Newsreader",Georgia,serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  main{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:40px 56px 48px}
+  .name{font-size:17px;font-weight:400}
+  .bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:48px;flex-wrap:wrap}
+  p{margin:0}
+  .premises{font-size:18px;line-height:1.6;color:var(--dim);font-style:italic}
+  .resolution{margin-top:.6em;font-size:clamp(30px,3.6vw,48px);line-height:1.15;letter-spacing:-.01em;max-width:22ch}
+  .bio{font-size:17px;line-height:1.6;color:var(--dim);text-align:right}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .theme{position:fixed;top:36px;right:56px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:760px){
+    main{padding:32px 24px 40px}
+    .bottom{flex-direction:column;align-items:flex-start;gap:36px}
+    .bio{text-align:left}
+    .theme{right:24px;top:28px}
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="name">Aayush Naik</div>
+  <div></div>
+  <div class="bottom">
+    <div>
+      <p class="premises">Even if the world is far from perfect.<br>Even if the universe is silent.<br>Even if almost no one cares about you.<br>Even if you will soon die.</p>
+      <p class="resolution">Even if all that is true, I choose to live a beautiful existence.</p>
+    </div>
+    <p class="bio">I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a><br>and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</p>
+  </div>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

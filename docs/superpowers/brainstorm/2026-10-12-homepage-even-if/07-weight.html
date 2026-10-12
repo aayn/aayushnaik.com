@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 · Weight contrast</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.5);--rule:rgba(0,0,0,.14)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.65);--rule:rgba(255,255,255,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;background:var(--bg);color:var(--fg);
+    font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  main{width:100%;max-width:1000px;margin:0 auto;padding:60px 72px}
+  p{margin:0}
+  .big{font-size:clamp(28px,4.2vw,46px);line-height:1.12;max-width:26ch}
+  .premises{font-weight:800;letter-spacing:-.035em}
+  .resolution{font-weight:200;letter-spacing:-.01em;margin-top:.9em}
+  .foot{margin-top:60px;padding-top:22px;border-top:1px solid var(--rule);font-weight:200;font-size:18px;line-height:1.6;color:var(--dim);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot .name{font-weight:800;color:var(--fg);letter-spacing:-.02em}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:48px 24px}.theme{right:24px}.foot{margin-top:44px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="big premises">EVEN IF<br>The world is far from perfect.<br>The universe is silent.<br>Almost no one cares about you.<br>You will soon die.</p>
+  <p class="big resolution">EVEN IF all that is true, I choose to live a beautiful existence.</p>
+  <div class="foot">
+    <span>I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</span>
+    <span class="name">Aayush Naik</span>
+  </div>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

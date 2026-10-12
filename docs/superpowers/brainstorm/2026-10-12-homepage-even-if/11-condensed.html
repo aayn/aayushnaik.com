@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 · Condensed poster</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.5);--rule:rgba(0,0,0,.16)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.5);--rule:rgba(255,255,255,.18)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;background:var(--bg);color:var(--fg);
+    font-family:"Barlow Condensed",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  main{width:100%;max-width:1200px;margin:0 auto;padding:60px 64px}
+  p{margin:0}
+  .poster{text-transform:uppercase;font-size:clamp(36px,4.4vw,64px);line-height:1;letter-spacing:.005em}
+  .premises{font-weight:500}
+  .resolution{font-weight:300;margin-top:.6em;max-width:24ch}
+  .foot{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-weight:300;font-size:24px;line-height:1.4;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;color:var(--dim)}
+  .foot .name{color:var(--fg);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:48px 24px}.poster{font-size:clamp(40px,11vw,60px)}.foot{font-size:20px;margin-top:40px}.theme{right:24px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="poster premises">Even if<br>the world is far from perfect.<br>The universe is silent.<br>Almost no one cares about you.<br>You will soon die.</p>
+  <p class="poster resolution">Even if all that is true, I choose to live a beautiful existence.</p>
+  <div class="foot">
+    <span>I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</span>
+    <span class="name">Aayush Naik</span>
+  </div>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>
