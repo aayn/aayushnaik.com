@@ -1,0 +1,3 @@
+/essays /archive/essays 301
+/essays/ /archive/essays 301
+/essays/* /archive/essays/:splat 301

@@ -5,6 +5,7 @@ import MetaBlock from '../components/MetaBlock.astro';
 import TOC from '../components/TOC.astro';
 import Backlinks from '../components/Backlinks.astro';
 import type { Backlink } from '../lib/backlinks';
+import { features } from '../lib/features';
 
 interface Heading {
   depth: number;
@@ -14,9 +15,9 @@ interface Heading {
 interface FrontMatter {
   title: string;
   subtitle?: string;
-  importance: number;
-  confidence: string;
-  status: string;
+  importance?: number;
+  confidence?: string;
+  status?: string;
   stance?: string;
 }
 interface Props {
@@ -25,9 +26,11 @@ interface Props {
   backlinks: Backlink[];
   createdDate?: string | null;
   modifiedDate?: string | null;
+  indexPath?: string;
+  indexLabel?: string;
 }
 
-const { frontmatter, headings, backlinks, createdDate, modifiedDate } = Astro.props;
+const { frontmatter, headings, backlinks, createdDate, modifiedDate, indexPath = '/archive/essays', indexLabel = 'archived essays' } = Astro.props;
 
 function fmtDate(iso: string | null | undefined): string | null {
   if (!iso) return null;
@@ -41,7 +44,7 @@ const showToc = h2Count >= 2;
 ---
 <BaseLayout title={`${frontmatter.title} — Aayush Naik`} description={frontmatter.subtitle ?? frontmatter.title}>
   <div class="essay-page">
-    <a class="back-link" href="/essays">← essays</a>
+    <a class="back-link" href={indexPath}>{indexLabel}</a>
 
     <div class="essay-grid" data-show-toc={String(showToc)}>
       <div class="toc-col">
@@ -54,18 +57,21 @@ const showToc = h2Count >= 2;
           {(created || modified) && (
             <div class="essay-dates">
               {created && <span>created {created}</span>}
-              {created && modified && created !== modified && <span> · </span>}
               {modified && created !== modified && <span>modified {modified}</span>}
             </div>
           )}
-          <MetaBlock
-            importance={frontmatter.importance}
-            confidence={frontmatter.confidence}
-            status={frontmatter.status}
-            stance={frontmatter.stance}
-          />
-          <slot />
-          <Backlinks backlinks={backlinks} />
+          {features.epistemicMetadata && frontmatter.importance !== undefined && frontmatter.confidence !== undefined && frontmatter.status !== undefined && (
+            <MetaBlock
+              importance={frontmatter.importance}
+              confidence={frontmatter.confidence}
+              status={frontmatter.status}
+              stance={frontmatter.stance}
+            />
+          )}
+          <div class="essay-content">
+            <slot />
+          </div>
+          <Backlinks backlinks={backlinks} basePath={indexPath} />
         </article>
       </div>
     </div>
@@ -138,7 +144,7 @@ const showToc = h2Count >= 2;
   .essay-body :global(p) {
     margin: 0 0 14px 0;
   }
-  .essay-body :global(p:first-of-type)::first-letter {
+  .essay-content > :global(p:first-of-type)::first-letter {
     float: left;
     font-size: 44px;
     line-height: 0.85;
@@ -148,7 +154,7 @@ const showToc = h2Count >= 2;
     font-weight: 500;
   }
   @media (max-width: 1179px) {
-    .essay-body :global(p:first-of-type)::first-letter {
+    .essay-content > :global(p:first-of-type)::first-letter {
       font-size: 46px;
     }
   }
@@ -210,6 +216,9 @@ const showToc = h2Count >= 2;
     margin: 0 0 6px 0;
   }
   .essay-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 10.5px;

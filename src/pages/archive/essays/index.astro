@@ -1,8 +1,13 @@
 ---
-// src/pages/essays/index.astro — chronological list
-import BaseLayout from '../../layouts/BaseLayout.astro';
+// src/pages/archive/essays/index.astro — chronological list
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { getModifiedDate } from '../../lib/git-dates';
+import { getModifiedDate } from '../../../lib/git-dates';
+import { features } from '../../../lib/features';
+
+const description = features.epistemicMetadata
+  ? 'Beliefs and positions, weighed and dated.'
+  : 'Archived essays by Aayush Naik.';
 
 const all = await getCollection('essays');
 const enriched = all.map((entry) => {
@@ -32,26 +37,28 @@ function stanceClass(s: string | undefined): string {
   }
 }
 ---
-<BaseLayout title="Essays — Aayush Naik" description="Beliefs and positions, weighed and dated.">
+<BaseLayout title="Archived essays — Aayush Naik" description={description}>
   <div class="index-page">
-    <a class="back-link" href="/">← home</a>
+    <a class="back-link" href="/">home</a>
 
     <header class="index-head">
-      <h1>Essays</h1>
-      <p class="index-sub">Beliefs and positions, weighed and dated</p>
+      <h1>Archived essays</h1>
+      {features.epistemicMetadata && <p class="index-sub">Beliefs and positions, weighed and dated</p>}
     </header>
 
     <ol class="index-list">
       {enriched.map(({ entry }) => (
         <li class="entry">
-          <a class="e-title" href={`/essays/${entry.id}`}>{entry.data.title}</a>
+          <a class="e-title" href={`/archive/essays/${entry.id}`}>{entry.data.title}</a>
           {entry.data.subtitle && <p class="e-sub">{entry.data.subtitle}</p>}
-          <div class="e-meta">
-            <span><span class="k">imp</span>{entry.data.importance} / 10</span>
-            <span><span class="k">conf</span>{entry.data.confidence}</span>
-            <span><span class="k">status</span><span class={`stat ${statusClass(entry.data.status)}`}>{entry.data.status}</span></span>
-            <span><span class="k">stance</span><span class={stanceClass(entry.data.stance)}>{entry.data.stance ?? '—'}</span></span>
-          </div>
+          {features.epistemicMetadata && (
+            <div class="e-meta">
+              <span><span class="k">imp</span>{entry.data.importance} / 10</span>
+              <span><span class="k">conf</span>{entry.data.confidence}</span>
+              <span><span class="k">status</span><span class={`stat ${statusClass(entry.data.status)}`}>{entry.data.status}</span></span>
+              <span><span class="k">stance</span><span class={stanceClass(entry.data.stance)}>{entry.data.stance ?? '—'}</span></span>
+            </div>
+          )}
         </li>
       ))}
     </ol>

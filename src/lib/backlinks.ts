@@ -1,6 +1,6 @@
 // src/lib/backlinks.ts
-// Build-time scan of essay bodies for cross-essay references.
-// Top-level memoized — reverse map is computed once per build.
+// Build-time scan of writing for references within each collection.
+// The reverse map is computed once per collection per build.
 
 export interface EssayEntry {
   slug: string;
@@ -25,13 +25,16 @@ export interface Backlink {
   snippet: string;
 }
 
+type WritingCollection = 'essays' | 'thoughts';
+
 const SNIPPET_MAX = 180;
 
-export function extractInternalLinks(body: string): InternalLink[] {
+export function extractInternalLinks(body: string, collection: WritingCollection = 'essays'): InternalLink[] {
   const out: InternalLink[] = [];
 
-  // Markdown: [text](/essays/slug)
-  const mdRe = /\[([^\]]+)\]\(\/essays\/([a-z0-9][a-z0-9-]*)\)/g;
+  // Accept legacy essay URLs as well as their canonical archive URLs.
+  const path = collection === 'essays' ? '(?:archive/)?essays' : 'thoughts';
+  const mdRe = new RegExp(String.raw`\[([^\]]+)\]\(/${path}/([a-z0-9][a-z0-9-]*)\)`, 'g');
   for (const m of body.matchAll(mdRe)) {
     const idx = m.index ?? 0;
     out.push({
@@ -41,8 +44,7 @@ export function extractInternalLinks(body: string): InternalLink[] {
     });
   }
 
-  // HTML: <a href="/essays/slug">text</a>
-  const htmlRe = /<a\s+href="\/essays\/([a-z0-9][a-z0-9-]*)"[^>]*>([^<]+)<\/a>/g;
+  const htmlRe = new RegExp(String.raw`<a\s+href="/${path}/([a-z0-9][a-z0-9-]*)"[^>]*>([^<]+)</a>`, 'g');
   for (const m of body.matchAll(htmlRe)) {
     const idx = m.index ?? 0;
     out.push({
@@ -71,12 +73,12 @@ function makeSnippet(context: string, linkedPhrase: string): string {
   return s;
 }
 
-let _reverseMap: Map<string, Backlink[]> | null = null;
+const reverseMaps = new Map<WritingCollection, Map<string, Backlink[]>>();
 
-export function buildReverseMap(entries: EssayEntry[]): Map<string, Backlink[]> {
+export function buildReverseMap(entries: EssayEntry[], collection: WritingCollection = 'essays'): Map<string, Backlink[]> {
   const map = new Map<string, Backlink[]>();
   for (const entry of entries) {
-    const links = extractInternalLinks(entry.body);
+    const links = extractInternalLinks(entry.body, collection);
     for (const link of links) {
       const target = link.targetSlug;
       if (!map.has(target)) map.set(target, []);
@@ -96,20 +98,20 @@ export function buildReverseMap(entries: EssayEntry[]): Map<string, Backlink[]> 
 }
 
 export function clearMemoForTest(): void {
-  _reverseMap = null;
+  reverseMaps.clear();
 }
 
-export async function getBacklinks(slug: string): Promise<Backlink[]> {
-  if (_reverseMap === null) {
+export async function getBacklinks(slug: string, collectionName: WritingCollection = 'essays'): Promise<Backlink[]> {
+  if (!reverseMaps.has(collectionName)) {
     // Lazy import to avoid bundling astro:content into the test environment.
     const { getCollection } = await import('astro:content');
-    const collection = await getCollection('essays');
+    const collection = await getCollection(collectionName);
     const entries: EssayEntry[] = collection.map((c) => ({
       slug: c.id,
       data: { title: c.data.title, subtitle: c.data.subtitle },
       body: c.body ?? '',
     }));
-    _reverseMap = buildReverseMap(entries);
+    reverseMaps.set(collectionName, buildReverseMap(entries, collectionName));
   }
-  return _reverseMap.get(slug) ?? [];
+  return reverseMaps.get(collectionName)?.get(slug) ?? [];
 }

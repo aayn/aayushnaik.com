@@ -19,5 +19,10 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  redirects: {
+    '/essays': '/archive/essays',
+    '/essays/glossary': '/archive/essays/glossary',
+    '/essays/[...slug]': '/archive/essays/[...slug]',
+  },
   site: 'https://aayushnaik.com',
 });

@@ -1,11 +1,14 @@
 ---
-// src/pages/essays/glossary.astro
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import KesselmanLadder from '../../components/KesselmanLadder.astro';
+// src/pages/archive/essays/glossary.astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import KesselmanLadder from '../../../components/KesselmanLadder.astro';
+import { features } from '../../../lib/features';
+
+if (!features.epistemicMetadata) return Astro.redirect('/archive/essays', 302);
 ---
 <BaseLayout title="Glossary — Essays — Aayush Naik" description="Notation used in the metacommentary block of each essay.">
   <div class="glossary-page">
-    <a class="back-link" href="/essays">← essays</a>
+    <a class="back-link" href="/archive/essays">archived essays</a>
     <header>
       <h1>Glossary</h1>
       <p class="lede">Each essay declares its position via four fields. Here's what they mean.</p>
