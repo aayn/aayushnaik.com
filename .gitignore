@@ -27,5 +27,7 @@ dist-ssr
 .worktrees
 .playwright-mcp
 archive
+!src/pages/archive/
+!src/pages/archive/**
 
 .obsidian

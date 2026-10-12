@@ -46,7 +46,6 @@ const numbered = filtered.map((h) => {
         <span class="toc-chip-icon">≡</span>
         <span class="toc-chip-label">Outline</span>
         <span class="toc-chip-count">{h2Count} sections</span>
-        <span class="toc-chip-arrow">▾</span>
       </button>
       <div class="toc-drawer" hidden>
         <div class="toc-drawer-head">
@@ -147,13 +146,6 @@ const numbered = filtered.map((h) => {
     font-family: 'IBM Plex Mono', monospace;
     margin-left: 8px;
   }
-  .toc-chip-arrow {
-    margin-left: auto;
-    color: var(--dim);
-    transition: transform 0.2s ease;
-  }
-  .toc-chip[aria-expanded="true"] .toc-chip-arrow { transform: rotate(180deg); }
-
   .toc-drawer {
     background: rgba(216, 207, 191, 0.05);
     border-left: 2px solid rgba(243, 234, 215, 0.32);

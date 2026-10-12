@@ -1,5 +1,5 @@
 ---
-// src/pages/essays/[...slug].astro
+// src/pages/thoughts/[...slug].astro
 import { getCollection, render } from 'astro:content';
 import EssayLayout from '../../layouts/EssayLayout.astro';
 import { getBacklinks } from '../../lib/backlinks';
@@ -9,11 +9,11 @@ import Figure from '../../components/Figure.astro';
 import Pullquote from '../../components/Pullquote.astro';
 
 export async function getStaticPaths() {
-  const essays = await getCollection('essays');
+  const thoughts = await getCollection('thoughts');
   return Promise.all(
-    essays.map(async (entry) => {
-      const filePath = `src/content/essays/${entry.id}.mdx`;
-      const backlinks = await getBacklinks(entry.id);
+    thoughts.map(async (entry) => {
+      const filePath = entry.filePath ?? `src/content/thoughts/${entry.id}.mdx`;
+      const backlinks = await getBacklinks(entry.id, 'thoughts');
       return {
         params: { slug: entry.id },
         props: {
@@ -31,6 +31,8 @@ const { entry, backlinks, createdDate, modifiedDate } = Astro.props;
 const { Content, headings } = await render(entry);
 ---
 <EssayLayout
+  indexPath="/thoughts"
+  indexLabel="thoughts"
   frontmatter={entry.data}
   headings={headings}
   backlinks={backlinks}

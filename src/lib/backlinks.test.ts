@@ -15,6 +15,17 @@ describe('extractInternalLinks', () => {
     expect(links.map((l) => l.targetSlug).sort()).toEqual(['bar', 'foo']);
   });
 
+  it('accepts canonical archive URLs alongside legacy essay URLs', () => {
+    const body = '[Old](/essays/legacy) [Archived](/archive/essays/archived) <a href="/archive/essays/html">HTML</a>';
+    expect(extractInternalLinks(body).map((link) => link.targetSlug)).toEqual(['legacy', 'archived', 'html']);
+  });
+
+  it('keeps thought references separate from legacy and archived essay references', () => {
+    const body = '[Essay](/essays/shared) [Archive](/archive/essays/shared) [Thought](/thoughts/shared) <a href="/thoughts/html">HTML</a>';
+    expect(extractInternalLinks(body, 'thoughts').map((link) => link.targetSlug)).toEqual(['shared', 'html']);
+    expect(extractInternalLinks(body).map((link) => link.linkedPhrase)).toEqual(['Essay', 'Archive']);
+  });
+
   it('ignores external and non-essay links', () => {
     const body = '[Google](https://google.com) and [Home](/) and [Hyper](https://hypercubic.ai)';
     const links = extractInternalLinks(body);
@@ -58,6 +69,16 @@ describe('buildReverseMap', () => {
     });
     expect(map.get('moral-weight')).toHaveLength(1);
     expect(map.get('grief')).toBeUndefined();
+  });
+
+  it('does not create backlinks to a thought from an essay URL with the same slug', () => {
+    const entries: EssayEntry[] = [
+      { slug: 'first', data: { title: 'First thought' }, body: '[Essay](/archive/essays/shared) [Thought](/thoughts/shared)' },
+      { slug: 'second', data: { title: 'Second thought' }, body: '[Legacy essay](/essays/shared)' },
+    ];
+    const map = buildReverseMap(entries, 'thoughts');
+    expect(map.get('shared')).toHaveLength(1);
+    expect(map.get('shared')?.[0]).toMatchObject({ fromSlug: 'first', linkedPhrase: 'Thought' });
   });
 
   it('produces a snippet for each backlink', () => {

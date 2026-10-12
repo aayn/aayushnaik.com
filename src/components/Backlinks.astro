@@ -5,8 +5,9 @@ import type { Backlink } from '../lib/backlinks';
 
 interface Props {
   backlinks: Backlink[];
+  basePath?: string;
 }
-const { backlinks } = Astro.props;
+const { backlinks, basePath = '/archive/essays' } = Astro.props;
 
 function emphasizeLinkedPhrase(snippet: string, phrase: string): string {
   if (!phrase) return snippet;
@@ -22,7 +23,7 @@ function emphasizeLinkedPhrase(snippet: string, phrase: string): string {
     <div class="backlinks-label">Linked from</div>
     {backlinks.map((b) => (
       <article class="bl-row">
-        <a class="bl-title" href={`/essays/${b.fromSlug}`}>{b.fromTitle}</a>
+        <a class="bl-title" href={`${basePath}/${b.fromSlug}`}>{b.fromTitle}</a>
         {b.fromSubtitle && <div class="bl-sub">{b.fromSubtitle}</div>}
         <blockquote class="bl-snippet" set:html={emphasizeLinkedPhrase(b.snippet, b.linkedPhrase)} />
       </article>
