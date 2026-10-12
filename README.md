@@ -20,8 +20,8 @@ TypeScript 7 yet.
 
 ## Writing
 
-`/thoughts` is the new writing section. It starts empty and uses its own content
-collection; existing essays are not included.
+`/thoughts` is the new writing section. It uses its own content collection;
+existing essays are not included.
 
 Add a Markdown or MDX file to `src/content/thoughts/` when ready to publish a piece.
 Only `title` is required; `subtitle` is optional:
