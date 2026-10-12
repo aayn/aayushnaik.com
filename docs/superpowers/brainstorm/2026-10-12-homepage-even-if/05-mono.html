@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 · Mono</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:rgba(0,0,0,.88);--dim:rgba(0,0,0,.5);--rule:rgba(0,0,0,.18);--solid:#000}
+  html.dark{--bg:#000;--fg:rgba(255,255,255,.88);--dim:rgba(255,255,255,.5);--rule:rgba(255,255,255,.2);--solid:#fff}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--fg);
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;-webkit-font-smoothing:antialiased}
+  main{max-width:calc(68ch + 120px);padding:60px;font-size:15px;line-height:1.85}
+  .l{margin:0;opacity:0;animation:show 1ms step-end forwards}
+  .gap{height:1.85em}
+  hr{border:0;border-top:1px solid var(--rule);margin:2.4em 0;opacity:0;animation:show 1ms step-end forwards}
+  a{color:var(--solid);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule)}
+  a:hover{text-decoration-color:var(--solid)}
+  .dim{color:var(--dim)}
+  @keyframes show{to{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.l,hr{animation:none;opacity:1}}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:40px 24px;font-size:14px}.theme{right:24px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="l" style="animation-delay:.15s">EVEN IF</p>
+  <p class="l" style="animation-delay:.35s">The world is far from perfect.</p>
+  <p class="l" style="animation-delay:.55s">The universe is silent.</p>
+  <p class="l" style="animation-delay:.75s">Almost no one cares about you.</p>
+  <p class="l" style="animation-delay:.95s">You will soon die.</p>
+  <div class="gap"></div>
+  <p class="l" style="animation-delay:1.5s">EVEN IF all that is true, I choose to live a beautiful existence.</p>
+  <hr style="animation-delay:2s">
+  <p class="l" style="animation-delay:2.1s">I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</p>
+  <div class="gap"></div>
+  <p class="l dim" style="animation-delay:2.3s">-- Aayush Naik</p>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

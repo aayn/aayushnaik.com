@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 · Baseline</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<style>
+  :root{--bg:#fff;--fg:rgba(0,0,0,.88);--dim:rgba(0,0,0,.55);--rule:rgba(0,0,0,.14);--solid:#000}
+  html.dark{--bg:#000;--fg:rgba(255,255,255,.88);--dim:rgba(255,255,255,.5);--rule:rgba(255,255,255,.16);--solid:#fff}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:680px;padding:60px}
+  p{margin:0;font-size:17px;line-height:1.75;font-weight:300}
+  .premises{margin-bottom:1.75em}
+  hr{border:0;border-top:1px solid var(--rule);margin:44px 0}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule);transition:color .2s,text-decoration-color .2s}
+  a:hover{color:var(--solid);text-decoration-color:var(--solid)}
+  a::after{content:"\2197";font-size:.7em;margin-left:.2em;vertical-align:.2em;color:var(--dim)}
+  .sig{margin-top:1.75em;color:var(--dim)}
+  .in{opacity:0;transform:translateY(14px);animation:enter .9s ease forwards}
+  @keyframes enter{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.in{animation:none;opacity:1;transform:none}}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:640px){main{padding:40px 28px}.theme{right:24px}}
+</style>
+</head>
+<body>
+<main>
+  <p class="premises in" style="animation-delay:.1s">EVEN IF<br>The world is far from perfect.<br>The universe is silent.<br>Almost no one cares about you.<br>You will soon die.</p>
+  <p class="in" style="animation-delay:.3s">EVEN IF all that is true, I choose to live a beautiful existence.</p>
+  <hr class="in" style="animation-delay:.45s">
+  <p class="in" style="animation-delay:.55s">I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</p>
+  <p class="sig in" style="animation-delay:.65s">— Aayush Naik</p>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>

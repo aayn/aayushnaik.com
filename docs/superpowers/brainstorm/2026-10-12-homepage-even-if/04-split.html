@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 · Split</title>
+<script>(()=>{const t=localStorage.getItem('v-theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff;--fg:#000;--dim:rgba(0,0,0,.55);--rule:rgba(0,0,0,.16)}
+  html.dark{--bg:#000;--fg:#fff;--dim:rgba(255,255,255,.55);--rule:rgba(255,255,255,.18)}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;display:flex;align-items:center;background:var(--bg);color:var(--fg);
+    font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  main{width:100%;max-width:1200px;margin:0 auto;padding:60px 72px;display:grid;grid-template-columns:5fr 7fr;column-gap:72px;row-gap:72px}
+  .left{font-size:19px;line-height:1.65;margin:0;padding-top:.35em}
+  .right{margin:0;font-size:clamp(30px,3.8vw,50px);font-weight:400;line-height:1.18;letter-spacing:-.015em;padding-left:72px;border-left:1px solid var(--rule)}
+  .foot{grid-column:1/-1;display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;font-size:16px;color:var(--dim);border-top:1px solid var(--rule);padding-top:22px}
+  .foot .name{color:var(--fg);font-weight:500}
+  a{color:var(--fg);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+  a:hover{text-decoration-color:var(--fg)}
+  .theme{position:fixed;top:28px;right:48px;background:none;border:0;color:inherit;opacity:.35;cursor:pointer;font-size:18px;padding:4px}
+  .theme:hover{opacity:.8}
+  @media(max-width:860px){
+    main{grid-template-columns:1fr;row-gap:40px;padding:48px 28px}
+    .right{padding-left:0;border-left:0;padding-top:32px;border-top:1px solid var(--rule)}
+    .theme{right:24px}
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="left">EVEN IF<br>The world is far from perfect.<br>The universe is silent.<br>Almost no one cares about you.<br>You will soon die.</p>
+  <p class="right">EVEN IF all that is true, I choose to live a beautiful existence.</p>
+  <div class="foot">
+    <span>I'm building <a href="https://hypercubic.ai" target="_blank" rel="noopener">Hypercubic</a> and I <a href="https://www.anticynical.com/" target="_blank" rel="noopener">write</a> sometimes.</span>
+    <span class="name">Aayush Naik</span>
+  </div>
+</main>
+<button class="theme" aria-label="Toggle light/dark" onclick="localStorage.setItem('v-theme',document.documentElement.classList.toggle('dark')?'dark':'light')">◐</button>
+</body>
+</html>
