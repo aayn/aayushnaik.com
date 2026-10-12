@@ -59,11 +59,12 @@ export default function AmbientClock() {
     let isActive = false
 
     const C = theme === 'dark' ? '255,255,255' : '0,0,0'
+    const alphaScale = theme === 'dark' ? 1.5 : 1
 
     function drawRing(cx: number, cy: number, r: number, alpha: number) {
       ctx!.beginPath()
       ctx!.arc(cx, cy, r, 0, TAU)
-      ctx!.strokeStyle = `rgba(${C},${alpha})`
+      ctx!.strokeStyle = `rgba(${C},${alpha * alphaScale})`
       ctx!.lineWidth = 1
       ctx!.stroke()
     }
@@ -81,7 +82,7 @@ export default function AmbientClock() {
         cy + Math.sin(angle - Math.PI / 2) * length
       )
       grad.addColorStop(0, `rgba(${C},0)`)
-      grad.addColorStop(1, `rgba(${C},${alpha})`)
+      grad.addColorStop(1, `rgba(${C},${alpha * alphaScale})`)
       ctx!.beginPath()
       ctx!.moveTo(cx, cy)
       ctx!.lineTo(
@@ -145,7 +146,7 @@ export default function AmbientClock() {
 
       ctx!.beginPath()
       ctx!.arc(cx, cy, 2, 0, TAU)
-      ctx!.fillStyle = `rgba(${C},0.18)`
+      ctx!.fillStyle = `rgba(${C},${0.18 * alphaScale})`
       ctx!.fill()
 
       ctx!.globalAlpha = 1
