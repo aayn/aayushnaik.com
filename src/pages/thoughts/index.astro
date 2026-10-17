@@ -2,7 +2,7 @@
 // src/pages/thoughts/index.astro — chronological list
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { getModifiedDate } from '../../lib/git-dates';
+import { getCreatedDate } from '../../lib/git-dates';
 import { features } from '../../lib/features';
 
 const description = 'Stream-of-consciousness writing, usually 200–500 words.';
@@ -12,10 +12,10 @@ const enriched = all.map((entry) => {
   const filePath = entry.filePath ?? `src/content/thoughts/${entry.id}.mdx`;
   return {
     entry,
-    modified: getModifiedDate(filePath) ?? '0',
+    published: Date.parse(getCreatedDate(filePath) ?? '') || 0,
   };
 });
-enriched.sort((a, b) => b.modified.localeCompare(a.modified));
+enriched.sort((a, b) => b.published - a.published);
 
 function statusClass(s: string): string {
   switch (s) {
